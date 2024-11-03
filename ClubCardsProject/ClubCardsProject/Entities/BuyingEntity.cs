@@ -1,6 +1,6 @@
 ﻿namespace ClubCardsProject.Entities
 {
-    public  enum PaymentMethodTypes { CASH, CREDITCARD, CHECK }
+    public  enum PaymentMethodTypes { CASH=1, CREDIT_CARD, CHECK }
         
     public class BuyingEntity
         {
