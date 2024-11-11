@@ -1,53 +1,61 @@
 ﻿using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace ClubCardsProject.Services
 {
     public class StoreService
     {
-        static List<StoreEntity> _storeEntityes;
+        //static List<StoreEntity> _stores;
+        static DataContext _stores;
+        //ValidationCheckGeneric<StoreEntity> valid;
+        ValidationCheckGeneric valid;
 
         public List<StoreEntity> GetStores()
         {
-            if (_storeEntityes == null)
+            if (_stores == null)
             {
                 return null;
             }
-            return _storeEntityes;
+            return _stores.StoresList;
         }
 
         public StoreEntity GetStoreById(int id)
         {
-            if (_storeEntityes == null || (_storeEntityes.Find(s=>s.Id==id)==null))
+            if (_stores == null || (_stores.StoresList.Find(s=>s.Id==id)==null))
                 return null;
-            return _storeEntityes.Find(store => store.Id == id);
+            return _stores.StoresList.Find(store => store.Id == id);
         }
 
-        public bool PostStore(StoreEntity store)
+        public bool AddStore(StoreEntity store)
         {
-            if (_storeEntityes == null)
-                _storeEntityes = new List<StoreEntity>();
-            if (_storeEntityes.Find(b => b.Id == store.Id) != null)
+            if (_stores.StoresList == null)
+                //_stores = new List<StoreEntity>();
+                _stores=new DataContext();
+            else if (_stores.StoresList.Find(b => b.Id == store.Id) != null)//אם ה id כבר קיים במערכת
+                 return false;
+            valid = new ValidationCheckGeneric();
+            if (!valid.IsEmailValid(store.Email) )
                 return false;
-            _storeEntityes.Add(store);
+            _stores.StoresList.Add(store);
             return true;
         }
 
-        public bool PutStore(int id, StoreEntity store)
+        public bool UpdateStore(int id, StoreEntity store)
         {
-            if (_storeEntityes == null || (_storeEntityes.Find(s => s.Id == id) == null))
+            if (_stores.StoresList == null || (_stores.StoresList.Find(s => s.Id == id) == null))
                 return false;
-            int index = _storeEntityes.FindIndex(store => store.Id == id);
-            _storeEntityes[index] = store;
+            int index = _stores.StoresList.FindIndex(store => store.Id == id);
+            _stores.StoresList[index] = store;
             return true;
         }
 
         public bool DeleteStore(int id)
         {
-            if (_storeEntityes == null || (_storeEntityes.Find(s => s.Id == id) == null))
+            if (_stores.StoresList == null || (_stores.StoresList.Find(s => s.Id == id) == null))
                 return false;
-            _storeEntityes.Remove(_storeEntityes.Find(store => store.Id == id));
+            _stores.StoresList.Remove(_stores.StoresList.Find(store => store.Id == id));
             return true;
         }
     }

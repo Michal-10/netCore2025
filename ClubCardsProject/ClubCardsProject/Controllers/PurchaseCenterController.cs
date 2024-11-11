@@ -11,41 +11,44 @@ namespace ClubCardsProject.Controllers
     public class PurchaseCenterController : ControllerBase
     {
         PurchaseCenterService _purchaseCenterService=new PurchaseCenterService();
+       // private readonly DataContext _purchaseCenterService = new DataContext();
+
+
         // GET: api/<PurchaseCenterController>
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<List<PurchaseCenterEntity>> Get()
         {
-            var purchaseCenters = _purchaseCenterService.GetPurchaseCenters();
-            if (purchaseCenters == null)
-                return NotFound();
-            return Ok(purchaseCenters);
+            return _purchaseCenterService.GetPurchaseCenters();
+
         }
 
         // GET api/<PurchaseCenterController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public ActionResult<PurchaseCenterEntity> GetById(int id)
         {
+            if (id < 0)
+                return BadRequest();
             var purchaseCenter = _purchaseCenterService.GetPurchaseCenterByID(id);
             if (purchaseCenter == null)
                 return NotFound();
-            return Ok(purchaseCenter);
+            return purchaseCenter;
         }
 
         // POST api/<PurchaseCenterController>
         [HttpPost]
         public ActionResult Post([FromBody] PurchaseCenterEntity value)
         {
-            bool isSuccess = _purchaseCenterService.PostPurchaseCenter(value);
+            bool isSuccess = _purchaseCenterService.AddPurchaseCenter(value);
             if (isSuccess)
                 return Ok(true);
-            return NotFound("ID exists in the system"); 
+            return BadRequest("ID exists in the system");
         }
 
         // PUT api/<PurchaseCenterController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] PurchaseCenterEntity value)
         {
-            bool isSuccess = _purchaseCenterService.PutPurchaseCenter(id, value);
+            bool isSuccess = _purchaseCenterService.UpdatePurchaseCenter(id, value);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

@@ -1,50 +1,58 @@
 ﻿using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace ClubCardsProject.Services
 {
     public class PurchaseCenterService
     {
-        static List<PurchaseCenterEntity> _purchaseCenters;
+        //static List<PurchaseCenterEntity> _purchaseCenters;
+        //static DataContext _purchaseCenters;
+        //ValidationCheckGeneric<PurchaseCenterEntity> valid;
+        ValidationCheckGeneric valid;
 
         public List<PurchaseCenterEntity> GetPurchaseCenters()
         {
-            if (_purchaseCenters == null)
+            if (DataContextManager.Data.PurchaseCentersList == null)
                 return null;
-            return _purchaseCenters;
+            return DataContextManager.Data.PurchaseCentersList;
         }
 
         public PurchaseCenterEntity GetPurchaseCenterByID(int id)
         {
-            if (_purchaseCenters == null || (_purchaseCenters.FindIndex(p=>p.Id==id)==-1))
+            if (DataContextManager.Data.PurchaseCentersList == null || (DataContextManager.Data.PurchaseCentersList.FindIndex(p=>p.Id==id)==-1))
                 return null;
-            return _purchaseCenters.Find(p => p.Id == id);
+            return DataContextManager.Data.PurchaseCentersList.Find(p => p.Id == id);
         }
 
-        public bool PostPurchaseCenter(PurchaseCenterEntity purchaseCenter)
+        public bool AddPurchaseCenter(PurchaseCenterEntity purchaseCenter)
         {
-            if (_purchaseCenters == null)
-                _purchaseCenters = new List<PurchaseCenterEntity>();
-            if (_purchaseCenters.Find(b => b.Id == purchaseCenter.Id) != null)
+            if (DataContextManager.Data.PurchaseCentersList == null)
+                //_purchaseCenters = new List<PurchaseCenterEntity>();
+                DataContextManager.Data.PurchaseCentersList = new List<PurchaseCenterEntity>();
+            else if (DataContextManager.Data.PurchaseCentersList.Find(b => b.Id == purchaseCenter.Id) != null)//אם ה id כבר קיים במערכת
+                 return false;
+            valid = new ValidationCheckGeneric();
+            if (!valid.IsEmailValid(purchaseCenter.Email))
                 return false;
-            _purchaseCenters.Add(purchaseCenter);
+            DataContextManager.Data.PurchaseCentersList.Add(purchaseCenter);
             return true;
         }
 
-        public bool PutPurchaseCenter(int id, PurchaseCenterEntity purchaseCenter)
+        public bool UpdatePurchaseCenter(int id, PurchaseCenterEntity purchaseCenter)
         {
-            if (_purchaseCenters == null || (_purchaseCenters.Find(p => p.Id == id) == null))
+            if (DataContextManager.Data.PurchaseCentersList == null || (DataContextManager.Data.PurchaseCentersList.Find(p => p.Id == id) == null))
                 return false;
-            int index = _purchaseCenters.FindIndex(p => p.Id == id);
-            _purchaseCenters[index] = purchaseCenter;
+            int index = DataContextManager.Data.PurchaseCentersList.FindIndex(p => p.Id == id);
+            DataContextManager.Data.PurchaseCentersList[index] = purchaseCenter;
             return true;
         }
 
         public bool DeletePurchaseCentere(int id)
         {
-            if (_purchaseCenters == null || (_purchaseCenters.FindIndex(p => p.Id == id) == -1))
+            if (DataContextManager.Data.PurchaseCentersList == null || (DataContextManager.Data.PurchaseCentersList.FindIndex(p => p.Id == id) == -1))
                 return false;
-            _purchaseCenters.Remove(_purchaseCenters.Find(p => p.Id == id));
+            DataContextManager.Data.PurchaseCentersList.Remove(DataContextManager.Data.PurchaseCentersList.Find(p => p.Id == id));
             return true;
         }
     }

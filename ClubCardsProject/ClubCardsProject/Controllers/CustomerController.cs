@@ -11,41 +11,46 @@ namespace ClubCardsProject.Controllers
     public class CustomerController : ControllerBase
     {
         CustomerService _customerService=new CustomerService();
+        //private readonly DataContext _customerService=new DataContext();
+
         // GET: api/<CustomerController>
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<List<CustomerEntity>> Get()
         {
-           var customers = _customerService.GetCustomers();
-            if (customers == null)
-                return NotFound();
-            return Ok(customers);
+           //return  _customerService.GetCustomers();
+           return  _customerService.GetCustomers();
         }
 
         // GET api/<CustomerController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public ActionResult<CustomerEntity> GetById(int id)
         {
+            if (id < 0)
+                return BadRequest();
+            //var customer = _customerService.GetCustomerById(id);
             var customer = _customerService.GetCustomerById(id);
+            //var customer = _customerService.GetCustomers().Find(x => x.Id == id);
             if (customer == null)
                 return NotFound();
-            return Ok(customer);
+            return customer;
         }
 
         // POST api/<CustomerController>
         [HttpPost]
         public ActionResult Post([FromBody] CustomerEntity value)
         {
-            bool isSuccess = _customerService.PostCustomer(value);
+            //bool isSuccess = _customerService.AddCustomer(value);
+            bool isSuccess = _customerService.AddCustomer(value);
             if (isSuccess)
                 return Ok(true);
-            return NotFound("ID exists in the system");
+            return BadRequest("ID exists in the system");
         }
 
         // PUT api/<CustomerController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] CustomerEntity value)
         {
-            bool isSuccess = _customerService.PutCustomer(id, value);
+            bool isSuccess = _customerService.UpdateCustomer(id, value);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

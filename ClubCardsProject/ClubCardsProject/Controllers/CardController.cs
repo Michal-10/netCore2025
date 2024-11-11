@@ -13,21 +13,24 @@ namespace ClubCardsProject.Controllers
     public class CardController : ControllerBase
     {
         CardService _cardService = new CardService();
+        //private readonly DataContext _cardService = new DataContext();
+
+
         // GET: api/<CardController>
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<List<CardEntity>> Get()
         {
-           var cards = _cardService.GetCards();
-            if (cards == null)
-                return NotFound();
-            return Ok(cards);
+           //return _cardService.CardsList;
+           return _cardService.GetCards();
         }
     
 
         // GET api/<CardController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public ActionResult GetById(int id)
         {
+            if (id < 0)
+                return BadRequest();
             var card = _cardService.GetCardByID(id);
             if (card == null)
                 return NotFound();
@@ -38,17 +41,17 @@ namespace ClubCardsProject.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] CardEntity value)
         {
-           bool isSuccess = _cardService.PostCard(value);
+           bool isSuccess = _cardService.AddCard(value);
             if (isSuccess)
                 return Ok(true);
-            return NotFound("ID exists in the system");
+            return BadRequest("ID exists in the system");
         }
 
         // PUT api/<CardController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] CardEntity value)
         {
-            bool isSuccess = _cardService.PutCard(id, value);
+            bool isSuccess = _cardService.UpdateCard(id, value);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

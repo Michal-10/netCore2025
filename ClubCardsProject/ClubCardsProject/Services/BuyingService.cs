@@ -7,46 +7,70 @@ namespace ClubCardsProject.Services
 {
     public class BuyingService
     {
-       static List<BuyingEntity> _buyings;
-
+        //static List<BuyingEntity> _buyings;
+        //static DataContext _buyings;
+        //DataContextManager  _buyings;
         public List<BuyingEntity> GetBuyings()
         {
-            if (_buyings == null)
+            if (DataContextManager.Data.BuyingsList == null)
+            //if (_buyings == null)
                 return null;
-            return _buyings;
+            //return _buyings.BuyingsList;
+            return DataContextManager.Data.BuyingsList;
         }
 
         public BuyingEntity GetBuyingById(int id)
         {
-            if (_buyings == null || (_buyings.FindIndex(b=>b.Id==id))==-1)
+            //if (_buyings == null || (_buyings.BuyingsList.FindIndex(b=>b.Id==id))==-1)
+            //    return null;
+            //return _buyings.BuyingsList.Find(buying => buying.Id == id);
+            if (DataContextManager.Data.BuyingsList == null || (DataContextManager.Data.BuyingsList.FindIndex(b => b.Id == id)) == -1)
                 return null;
-            return _buyings.Find(buying => buying.Id == id);
+            return DataContextManager.Data.BuyingsList.Find(buying => buying.Id == id);
+
         }
 
-        public bool PostBuying(BuyingEntity buying)
+        public bool AddBuying(BuyingEntity buying)
         {
-            if (_buyings == null)
-                _buyings = new List<BuyingEntity>();
-            if (_buyings.Find(b=>b.Id==buying.Id)!=null)
+            //if (_buyings == null)
+            ////if (_buyings.BuyingsList == null)
+            //    //_buyings.BuyingsList = new List<BuyingEntity>();
+            //    _buyings=new DataContext();
+            //else if (_buyings.BuyingsList.Find(b=>b.Id==buying.Id)!=null)//אם ה id כבר קיים במערכת
+            //     return false;
+            //_buyings.BuyingsList.Add(buying);
+            //return true;
+            if (DataContextManager.Data.BuyingsList == null)
+                DataContextManager.Data.BuyingsList = new List<BuyingEntity>();
+            else if (DataContextManager.Data.BuyingsList.Find(b => b.Id == buying.Id) != null)//אם ה id כבר קיים במערכת
                 return false;
-            _buyings.Add(buying);
+            DataContextManager.Data.BuyingsList.Add(buying);
             return true;
         }
 
-        public bool PutBuying(int id, BuyingEntity buying)
+        public bool UpdateBuying(int id, BuyingEntity buying)
         {
-            if (_buyings == null || (_buyings.FindIndex(b => b.Id == id) == -1))
+            //if (_buyings.BuyingsList == null || (_buyings.BuyingsList.FindIndex(b => b.Id == id) == -1))
+            //    return false;
+            //int index = _buyings.BuyingsList.FindIndex(buying => buying.Id == id);
+            //_buyings.BuyingsList[index] = buying;
+            //return true;
+            if (DataContextManager.Data.BuyingsList == null || (DataContextManager.Data.BuyingsList.FindIndex(b => b.Id == id) == -1))
                 return false;
-            int index = _buyings.FindIndex(buying => buying.Id == id);
-            _buyings[index] = buying;
+            int index = DataContextManager.Data.BuyingsList.FindIndex(buying => buying.Id == id);
+            DataContextManager.Data.BuyingsList[index] = buying;
             return true;
         }
 
         public bool DeleteBuying(int id)
         {
-            if (_buyings == null || (_buyings.FindIndex(b => b.Id == id)) == -1)
+            //if (_buyings.BuyingsList == null || (_buyings.BuyingsList.FindIndex(b => b.Id == id)) == -1)
+            //    return false;
+            //_buyings.BuyingsList.Remove(_buyings.BuyingsList.Find(store => store.Id == id));
+            //return true;
+            if (DataContextManager.Data.BuyingsList == null || (DataContextManager.Data.BuyingsList.FindIndex(b => b.Id == id)) == -1)
                 return false;
-            _buyings.Remove(_buyings.Find(store => store.Id == id));
+            DataContextManager.Data.BuyingsList.Remove(DataContextManager.Data.BuyingsList.Find(store => store.Id == id));
             return true;
         }
 

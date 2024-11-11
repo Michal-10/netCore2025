@@ -11,41 +11,44 @@ namespace ClubCardsProject.Controllers
     public class StoreController : ControllerBase
     {
         StoreService _storeService=new StoreService();
+        //DataContext _storeService;
+
+
+
         // GET: api/<StoreController>
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<List<StoreEntity>> Get()
         {
-            var stores = _storeService.GetStores();
-            if (stores == null)
-                return NotFound();
-            return Ok(stores);
+            return _storeService.GetStores();
         }
 
         // GET api/<StoreController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public ActionResult<StoreEntity> GetById(int id)
         {
+            if (id < 0)
+                return BadRequest();
             var store = _storeService.GetStoreById(id);
             if (store == null)
                 return NotFound();
-            return Ok(store);
+            return store;
         }
 
         // POST api/<StoreController>
         [HttpPost]
         public ActionResult Post([FromBody] StoreEntity value)
         {
-            bool isSuccess = _storeService.PostStore(value);
+            bool isSuccess = _storeService.AddStore(value);
             if (isSuccess)
                 return Ok(true);
-            return NotFound("ID exists in the system"); ;
+            return BadRequest("ID exists in the system");
         }
 
         // PUT api/<StoreController>/5
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] StoreEntity value)
         {
-            bool isSuccess = _storeService.PutStore(id, value);
+            bool isSuccess = _storeService.UpdateStore(id, value);
             if (isSuccess)
                 return Ok(true);
             return NotFound(); 

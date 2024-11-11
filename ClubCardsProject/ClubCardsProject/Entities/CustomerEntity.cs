@@ -3,6 +3,7 @@
     public class CustomerEntity
     {
         public int Id { get; set; }
+        public string Tz { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
@@ -11,9 +12,10 @@
         public DateTime DateOfJoin { get; set; }
         public CustomerEntity() { }
 
-        public CustomerEntity(int id, string firstName, string lastName, string phone, string email, DateTime dateOfBirth, DateTime dateOfJoin)
+        public CustomerEntity(int id,string tz, string firstName, string lastName, string phone, string email, DateTime dateOfBirth, DateTime dateOfJoin)
         {
-            this.Id = id;
+            Id = id;
+            Tz = tz;
             FirstName = firstName;
             LastName = lastName;
             Phone = phone;
@@ -21,5 +23,6 @@
             DateOfBirth = dateOfBirth;
             DateOfJoin = dateOfJoin;
         }
+        
     }
 }
