@@ -6,10 +6,6 @@ namespace ClubCardsProject.Services
 {
     public class PurchaseCenterService
     {
-        //static List<PurchaseCenterEntity> _purchaseCenters;
-        //static DataContext _purchaseCenters;
-        //ValidationCheckGeneric<PurchaseCenterEntity> valid;
-        ValidationCheckGeneric valid;
 
         public List<PurchaseCenterEntity> GetPurchaseCenters()
         {
@@ -28,12 +24,10 @@ namespace ClubCardsProject.Services
         public bool AddPurchaseCenter(PurchaseCenterEntity purchaseCenter)
         {
             if (DataContextManager.Data.PurchaseCentersList == null)
-                //_purchaseCenters = new List<PurchaseCenterEntity>();
                 DataContextManager.Data.PurchaseCentersList = new List<PurchaseCenterEntity>();
             else if (DataContextManager.Data.PurchaseCentersList.Find(b => b.Id == purchaseCenter.Id) != null)//אם ה id כבר קיים במערכת
                  return false;
-            valid = new ValidationCheckGeneric();
-            if (!valid.IsEmailValid(purchaseCenter.Email))
+            if (!ValidationCheckGeneric.IsEmailValid(purchaseCenter.Email))
                 return false;
             DataContextManager.Data.PurchaseCentersList.Add(purchaseCenter);
             return true;

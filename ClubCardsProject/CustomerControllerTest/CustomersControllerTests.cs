@@ -1,5 +1,6 @@
 ﻿using ClubCardsProject.Controllers;
 using ClubCardsProject.Entities;
+using ClubCardsProject.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerControllerTest
@@ -13,10 +14,9 @@ namespace CustomerControllerTest
             //Arrange
 
             //Act
-            var test = (new CustomerController()).Get();
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).Get();
             //Assert
             Assert.IsType<ActionResult<List<CustomerEntity>>>(test);
-            //Assert.IsType<List<CustomerEntity>>(test);
         }
        
         [Fact]
@@ -25,7 +25,7 @@ namespace CustomerControllerTest
             //Arrange
             var id = -1;
             //Act
-            var test = (new CustomerController()).GetById(id);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).GetById(id);
             //Assert
             Assert.IsType<BadRequestResult>(test.Result);
         }
@@ -33,9 +33,9 @@ namespace CustomerControllerTest
         public void GetById_ReturnsNotFound()
         {
             //Arrange
-            var id = 2;
+            var id = 3;
             //Act
-            var test = (new CustomerController()).GetById(id);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).GetById(id);
             //Assert
             Assert.IsType<NotFoundResult>(test.Result);
         }
@@ -46,7 +46,7 @@ namespace CustomerControllerTest
             //Arrange
             var id = 1;
             //Act
-            var test = (new CustomerController()).GetById(id);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).GetById(id);
             //Assert
             Assert.IsType<ActionResult<CustomerEntity>>(test);
             //Assert.IsType<OkObjectResult>(test);
@@ -57,9 +57,10 @@ namespace CustomerControllerTest
         {
             //Arrange
             //מניחה כרגע שאובייקט 100 לא קיים 
-            var obj = new CustomerEntity( 150, "215112608", "mi", "iz", "054", "d@d.v", new DateTime(10, 10, 10), new DateTime(11, 11, 11) );
+            var obj = new CustomerEntity( 150, "215112608", "mi", "iz", "054", "d@" +
+                "d.v", new DateTime(10, 10, 10), new DateTime(11, 11, 11) );
             //Act
-            var test = (new CustomerController()).Post(obj);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).Post(obj);
             //Assert
             Assert.IsType<OkObjectResult>(test);
         }
@@ -70,7 +71,7 @@ namespace CustomerControllerTest
             //מניחה כרגע שאובייקט 1 קיים כבר
             var obj = new CustomerEntity(1, "111111111", "mi", "iz", "054", "hh", new DateTime(10, 10, 10), new DateTime(11, 11, 11));
             //Act
-            var test = (new CustomerController()).Post(obj);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).Post(obj);
             //Assert
             Assert.IsType<BadRequestObjectResult>(test);
         }
@@ -80,10 +81,10 @@ namespace CustomerControllerTest
         {
             //Arrange
             //מניחה כרגע שאובייקט 1 קיים כבר
-            var obj = new CustomerEntity(1, "215112608", "mi", "iz", "054", "hh@d.d", new DateTime(10, 10, 10), new DateTime(11, 11, 11));
+            var obj = new CustomerEntity(1, "214823064", "mi", "iz", "054", "hh@d.d", new DateTime(10, 10, 10), new DateTime(11, 11, 11));
             var id = 1;
             //Act
-            var test = (new CustomerController()).Put(id,obj);
+            var test = (new CustomerController(new CustomerService(new DataContextCustomerFake()))).Put(id,obj);
             //Assert
             Assert.IsType<OkObjectResult>(test);
         }
@@ -96,7 +97,7 @@ namespace CustomerControllerTest
             var obj = new CustomerEntity(100, "111111111", "mi", "iz", "054", "hh", new DateTime(10, 10, 10), new DateTime(11, 11, 11));
             var id = 100;
             //Act
-            var test= (new CustomerController()).Put(id, obj);
+            var test= (new CustomerController(new CustomerService(new DataContextCustomerFake()))).Put(id, obj);
             //Assert
             Assert.IsType<NotFoundResult>(test);
         }
@@ -109,7 +110,7 @@ namespace CustomerControllerTest
             //var id = 5;
             var id = 1;
             //Act
-            var test= new CustomerController().Delete(id);
+            var test= new CustomerController(new CustomerService(new DataContextCustomerFake())).Delete(id);
             //Assert
             Assert.IsType<OkObjectResult>(test);
         }
@@ -121,7 +122,7 @@ namespace CustomerControllerTest
             //מניחה כרגע שאובייקט לא קיים 
             var id = 500;
             //Act
-            var test = new CustomerController().Delete(id);
+            var test = new CustomerController(new CustomerService(new DataContextCustomerFake())).Delete(id);
             //Assert
             Assert.IsType<NotFoundResult>(test);
         }

@@ -7,10 +7,7 @@ namespace ClubCardsProject.Services
 {
     public class StoreService
     {
-        //static List<StoreEntity> _stores;
         static DataContext _stores;
-        //ValidationCheckGeneric<StoreEntity> valid;
-        ValidationCheckGeneric valid;
 
         public List<StoreEntity> GetStores()
         {
@@ -31,12 +28,10 @@ namespace ClubCardsProject.Services
         public bool AddStore(StoreEntity store)
         {
             if (_stores.StoresList == null)
-                //_stores = new List<StoreEntity>();
                 _stores=new DataContext();
             else if (_stores.StoresList.Find(b => b.Id == store.Id) != null)//אם ה id כבר קיים במערכת
                  return false;
-            valid = new ValidationCheckGeneric();
-            if (!valid.IsEmailValid(store.Email) )
+            if (!ValidationCheckGeneric.IsEmailValid(store.Email) )
                 return false;
             _stores.StoresList.Add(store);
             return true;

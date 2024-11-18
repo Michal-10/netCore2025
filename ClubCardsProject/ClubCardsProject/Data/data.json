@@ -1,0 +1,23 @@
+﻿[
+  {
+    "Id": 1,
+    "Tz": "123456789",
+    "FirstName": "John",
+    "LastName": "Doe",
+    "Phone": "050-1234567",
+    "Email": "johndoe@example.com",
+    "DateOfBirth": "1990-05-15T00:00:00",
+    "DateOfJoin": "2023-01-01T00:00:00"
+  },
+  {
+    "Id": 2,
+    "Tz": "987654321",
+    "FirstName": "Jane",
+    "LastName": "Smith",
+    "Phone": "050-7654321",
+    "Email": "janesmith@example.com",
+    "DateOfBirth": "1985-08-20T00:00:00",
+    "DateOfJoin": "2023-02-15T00:00:00"
+  }
+ 
+]

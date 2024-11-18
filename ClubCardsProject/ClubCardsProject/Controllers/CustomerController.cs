@@ -10,14 +10,16 @@ namespace ClubCardsProject.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        CustomerService _customerService=new CustomerService();
-        //private readonly DataContext _customerService=new DataContext();
+        readonly CustomerService _customerService;
+        public CustomerController(CustomerService customerService)
+        {
+            _customerService = customerService;
+        }
 
         // GET: api/<CustomerController>
         [HttpGet]
         public ActionResult<List<CustomerEntity>> Get()
         {
-           //return  _customerService.GetCustomers();
            return  _customerService.GetCustomers();
         }
 
@@ -27,9 +29,7 @@ namespace ClubCardsProject.Controllers
         {
             if (id < 0)
                 return BadRequest();
-            //var customer = _customerService.GetCustomerById(id);
             var customer = _customerService.GetCustomerById(id);
-            //var customer = _customerService.GetCustomers().Find(x => x.Id == id);
             if (customer == null)
                 return NotFound();
             return customer;
@@ -39,11 +39,10 @@ namespace ClubCardsProject.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] CustomerEntity value)
         {
-            //bool isSuccess = _customerService.AddCustomer(value);
             bool isSuccess = _customerService.AddCustomer(value);
             if (isSuccess)
                 return Ok(true);
-            return BadRequest("ID exists in the system");
+            return BadRequest("ID exists in the system or the file donwt found");
         }
 
         // PUT api/<CustomerController>/5

@@ -1,8 +1,8 @@
 ﻿namespace ClubCardsProject.Entities
 {
-    public class ValidationCheckGeneric
+    public static class ValidationCheckGeneric
     {
-        public bool IsTzValid(string value) 
+        public static bool IsTzValid(string value) 
         { 
             if (string.IsNullOrEmpty(value) || value.Length != 9) 
                 return false;
@@ -21,7 +21,7 @@
             return sum == 10;
 
         }
-        public bool IsEmailValid(string value)
+        public static bool IsEmailValid(string value)
         {
             if (value == null)
                 return false;

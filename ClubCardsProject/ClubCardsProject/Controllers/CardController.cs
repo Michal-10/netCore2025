@@ -13,14 +13,11 @@ namespace ClubCardsProject.Controllers
     public class CardController : ControllerBase
     {
         CardService _cardService = new CardService();
-        //private readonly DataContext _cardService = new DataContext();
-
-
+       
         // GET: api/<CardController>
         [HttpGet]
         public ActionResult<List<CardEntity>> Get()
         {
-           //return _cardService.CardsList;
            return _cardService.GetCards();
         }
     
