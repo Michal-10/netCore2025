@@ -1,0 +1,150 @@
+{
+  "BuyingsList": [
+    {
+      "Id": 1,
+      "IdCustomer": 101,
+      "IdCard": 201,
+      "IdPurchaseCenter": 301,
+      "Date": "2024-11-25",
+      "Sum": 150.75,
+      "PaymentMethod": "CASH"
+    },
+    {
+      "Id": 2,
+      "IdCustomer": 102,
+      "IdCard": 202,
+      "IdPurchaseCenter": 302,
+      "Date": "2024-11-26",
+      "Sum": 200.50,
+      "PaymentMethod": "CREDIT_CARD"
+    },
+    {
+      "Id": 3,
+      "IdCustomer": 103,
+      "IdCard": 203,
+      "IdPurchaseCenter": 303,
+      "Date": "2024-11-27",
+      "Sum": 99.99,
+      "PaymentMethod": "CHECK"
+    }
+  ],
+  "CardsList": [
+    {
+      "Id": 201,
+      "DateOfPurchase": "2024-11-20",
+      "CardValidity": "2025-11-20",
+      "PurchaseCenter": "Mall A",
+      "Sum": 500.00,
+      "IdCustomer": 101,
+      "ColorCard": "Gold"
+    },
+    {
+      "Id": 202,
+      "DateOfPurchase": "2024-11-22T15:00:00",
+      "CardValidity": "2025-11-22T15:00:00",
+      "PurchaseCenter": "Shop B",
+      "Sum": 300.00,
+      "IdCustomer": 102,
+      "ColorCard": "Silver"
+    },
+    {
+      "Id": 203,
+      "DateOfPurchase": "2024-11-23T16:45:00",
+      "CardValidity": "2025-11-23T16:45:00",
+      "PurchaseCenter": "Store C",
+      "Sum": 450.00,
+      "IdCustomer": 103,
+      "ColorCard": "Platinum"
+    }
+  ],
+  "CustomersList": [
+    {
+      "Id": 101,
+      "Tz": "123456789",
+      "FirstName": "David",
+      "LastName": "Levi",
+      "Phone": "050-1234567",
+      "Email": "david.levi@example.com",
+      "DateOfBirth": "1990-05-15",
+      "DateOfJoin": "2023-06-01"
+    },
+    {
+      "Id": 102,
+      "Tz": "987654321",
+      "FirstName": "Sarah",
+      "LastName": "Cohen",
+      "Phone": "052-7654321",
+      "Email": "sarah.cohen@example.com",
+      "DateOfBirth": "1985-03-10",
+      "DateOfJoin": "2022-01-20"
+    },
+    {
+      "Id": 103,
+      "Tz": "456789123",
+      "FirstName": "Yossi",
+      "LastName": "Bar",
+      "Phone": "053-4567891",
+      "Email": "yossi.bar@example.com",
+      "DateOfBirth": "1995-08-25",
+      "DateOfJoin": "2024-05-10"
+    }
+  ],
+  "PurchaseCentersList": [
+    {
+      "Id": 301,
+      "NamePurchasePoint": "Central Mall",
+      "Address": "123 Main Street",
+      "City": "Tel Aviv",
+      "Phone": "03-5551234",
+      "Email": "info@centralmall.com",
+      "Quantity": 500
+    },
+    {
+      "Id": 302,
+      "NamePurchasePoint": "City Center",
+      "Address": "456 Center Road",
+      "City": "Jerusalem",
+      "Phone": "02-3334567",
+      "Email": "contact@citycenter.com",
+      "Quantity": 300
+    },
+    {
+      "Id": 303,
+      "NamePurchasePoint": "North Plaza",
+      "Address": "789 North Ave",
+      "City": "Haifa",
+      "Phone": "04-2227890",
+      "Email": "support@northplaza.com",
+      "Quantity": 700
+    }
+  ],
+  "StoresList": [
+    {
+      "Id": 401,
+      "Name": "ElectroShop",
+      "Address": "1 Tech Lane",
+      "City": "Tel Aviv",
+      "Phone": "03-9991111",
+      "Email": "sales@electroshop.com",
+      "Manager": "Oren Siman"
+    },
+    {
+      "Id": 402,
+      "Name": "Fashion World",
+      "Address": "2 Fashion Blvd",
+      "City": "Jerusalem",
+      "Phone": "02-8882222",
+      "Email": "info@fashionworld.com",
+      "Manager": "Rachel Stern"
+    },
+    {
+      "Id": 403,
+      "Name": "Home Decor",
+      "Address": "3 Home Street",
+      "City": "Haifa",
+      "Phone": "04-7773333",
+      "Email": "contact@homedecor.com",
+      "Manager": "Yaakov Blum"
+    }
+  ]
+}
