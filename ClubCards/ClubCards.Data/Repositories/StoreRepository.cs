@@ -1,5 +1,7 @@
-﻿using ClubCardsProject.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCardsProject.Data;
 using ClubCardsProject.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,91 +10,41 @@ using System.Threading.Tasks;
 
 namespace ClubCards.Data.Repositories
 {
-    public class StoreRepository : IRepository<StoreEntity>
+    public class StoreRepository : RepositoryGeneric<StoreEntity>, IRepositoryStore
     {
-        private readonly DataContext _dataContext;
-        public StoreRepository (DataContext dataContext)
+        public StoreRepository(DataContext context) : base(context)
         {
-            _dataContext = dataContext;
         }
 
         public List<StoreEntity> GetAllDB()
         {
-            return _dataContext.StoresList.ToList();
+            return _dbSet.ToList();//.Include(s=>s.ListBuying).ToList();
         }
-        public StoreEntity GetByIdDB(int id)
+
+        public bool UpdateDB(int numStore, StoreEntity storeEntity)
         {
-            return _dataContext.StoresList.Where(b => b.Id == id).FirstOrDefault();
-        }
-        public int IsExist(uint numStore)
-        {
-            return _dataContext.StoresList.ToList().FindIndex(s => s.NumStore == numStore);
-        }
-        public bool AddDB(StoreEntity storeEntity)
-        {
-            try
-            {
-                 _dataContext.StoresList.Add(storeEntity);
-                 _dataContext.SaveChanges();
-                 return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+            StoreEntity store = GetByIdDB(numStore);
 
-        public bool UpdateDB(int numStoreIndex, StoreEntity storeEntity)
-        {
-            try
-            {
-                //int index = IsExist(numStore);
-                if (storeEntity.Id != 0)
-                    _dataContext.StoresList.ToList()[numStoreIndex].Id = storeEntity.Id;
+            if (storeEntity.Name != null && !string.IsNullOrEmpty(storeEntity.Name))
+                store.Name = storeEntity.Name;
 
-                if (!string.IsNullOrEmpty(storeEntity.Name))
-                    _dataContext.StoresList.ToList()[numStoreIndex].Name = storeEntity.Name;
+            if (storeEntity.Name != null && !string.IsNullOrEmpty(storeEntity.Address))
+                store.Address = storeEntity.Address;
 
-                if (!string.IsNullOrEmpty(storeEntity.Address))
-                    _dataContext.StoresList.ToList()[numStoreIndex].Address = storeEntity.Address;
+            if (storeEntity.City != null && !string.IsNullOrEmpty(storeEntity.City))
+                store.City = storeEntity.City;
 
-                if (!string.IsNullOrEmpty(storeEntity.City))
-                     _dataContext.StoresList.ToList()[numStoreIndex].City = storeEntity.City;
+            if (!string.IsNullOrEmpty(storeEntity.Phone))
+                store.Phone = storeEntity.Phone;
 
-                if (!string.IsNullOrEmpty(storeEntity.Phone))
-                     _dataContext.StoresList.ToList()[numStoreIndex].Phone = storeEntity.Phone;
+            if (!string.IsNullOrEmpty(storeEntity.Email))
+                store.Email = storeEntity.Email;
 
-                if (!string.IsNullOrEmpty(storeEntity.Email))
-                     _dataContext.StoresList.ToList()[numStoreIndex].Email = storeEntity.Email;
+            if (storeEntity.Manager != null && !string.IsNullOrEmpty(storeEntity.Manager))
+                store.Manager = storeEntity.Manager;
 
-                if (!string.IsNullOrEmpty(storeEntity.Manager))
-                     _dataContext.StoresList.ToList()[numStoreIndex].Manager = storeEntity.Manager;
-
-                _dataContext.SaveChanges(); 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return true;
         }
 
-        public bool DeleteDB(int numStoreIndexDelete)
-        {
-            try
-            {
-               // StoreEntity store = _dataContext.StoresList.ToList().Find(b => b.NumStore == numStore);
-                //_dataContext.StoresList.Remove(store);
-                _dataContext.StoresList.Remove(_dataContext.StoresList.ToList()[numStoreIndexDelete]);
-                _dataContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-       
     }
 }

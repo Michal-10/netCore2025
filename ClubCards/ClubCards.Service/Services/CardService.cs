@@ -1,5 +1,5 @@
-﻿using ClubCards.Core.Services;
-using ClubCards.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using System.Linq;
 
@@ -7,52 +7,60 @@ namespace ClubCardsProject.Services
 {
     public class CardService:ICardService
     {
-        private IRepository<CardEntity> _cardService;
-        public CardService(IRepository<CardEntity> cardService)
+        private IRepositoryCard _cardRepository;
+        private IRepositoryManager _repositoryManager;
+        public CardService(IRepositoryCard cardRepository, IRepositoryManager repositoryManager)
         {
-            _cardService = cardService;
+            _cardRepository = cardRepository;
+            _repositoryManager = repositoryManager;
         }
 
         public List<CardEntity> GetCards()
         {
-            return _cardService.GetAllDB();
+            return _cardRepository.GetAllDB();
         }
 
         public CardEntity GetCardByID(int id)
         {
-            var data = _cardService.GetAllDB();
-            if (data == null || (data.FindIndex(c => c.Id == id) == -1))
-                return null;
-            return _cardService.GetByIdDB(id);
+            //var data = _cardService.GetAllDB();
+            //if (data == null || (data.FindIndex(c => c.Id == id) == -1))
+            //    return null;
+            return _cardRepository.GetByIdDB(id);
         }
 
-        public bool AddCard(CardEntity card)
+        public bool AddCard(CardEntity cardObj)
         {
-            int index = _cardService.IsExist(card.NumCard);
-            if (index == -1)
+            CardEntity card = _cardRepository.GetByIdDB((int)cardObj.NumCard);
+            if (card == null)
             {
-                return _cardService.AddDB(card);
+                _cardRepository.AddDB(cardObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
 
-        public bool UpdateCard(uint numCard, CardEntity card)
+        public bool UpdateCard(uint numCard, CardEntity cardObj)
         {
-            int index = _cardService.IsExist(numCard);
-            if (index != -1)
+            CardEntity card = _cardRepository.GetByIdDB((int)numCard);
+            if (card != null)
             {
-                return _cardService.UpdateDB(index, card);
+                _cardRepository.UpdateDB((int)numCard, cardObj);
+                _repositoryManager.save() ;
+                return true;
             }
             return false;
         }
 
         public bool DeleteCard(uint numCard)
         {  
-            int index= _cardService.IsExist(numCard);
-            if (index != -1)
+            CardEntity card= _cardRepository.GetByIdDB((int)numCard);
+            if (card !=null)
             {
-                return _cardService.DeleteDB(index);
+                _cardRepository.DeleteDB((int)numCard);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }

@@ -27,7 +27,7 @@ namespace ClubCardsProject.Controllers
         [HttpGet("{numStore}")]
         public ActionResult<StoreEntity> GetById(int numStore)
         {
-            if (numStore < 0)
+            if (numStore <= 0)
                 return BadRequest();
             var store = _storeService.GetStoreById(numStore);
             if (store == null)

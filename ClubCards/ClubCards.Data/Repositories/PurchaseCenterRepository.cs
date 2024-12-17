@@ -1,5 +1,7 @@
-﻿using ClubCardsProject.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCardsProject.Data;
 using ClubCardsProject.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,92 +10,43 @@ using System.Threading.Tasks;
 
 namespace ClubCards.Data.Repositories
 {
-    public class PurchaseCenterRepository:IRepository<PurchaseCenterEntity>
+    public class PurchaseCenterRepository : RepositoryGeneric<PurchaseCenterEntity>, IRepositoryPurchaseCenter
     {
-        private readonly DataContext _dataContext;
-        public PurchaseCenterRepository(DataContext dataContext)
+        public PurchaseCenterRepository(DataContext context) : base(context)
         {
-            _dataContext = dataContext;
         }
 
         public List<PurchaseCenterEntity> GetAllDB()
         {
-            return _dataContext.PurchaseCentersList.ToList();
-        }
-        public PurchaseCenterEntity? GetByIdDB(int id)
-        {
-            return _dataContext.PurchaseCentersList.Where(b => b.Id == id).FirstOrDefault();
-        }
-        public int IsExist(uint numPurchaseCenter)
-        {
-            return _dataContext.PurchaseCentersList.ToList().FindIndex(p => p.NumPurchaseCenter == numPurchaseCenter);
-        }
-        public bool AddDB(PurchaseCenterEntity purchaseCenterEntity)
-        {
-            try
-            {
-                 _dataContext.PurchaseCentersList.Add(purchaseCenterEntity);
-                 _dataContext.SaveChanges();
-                 return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return _dbSet.ToList();//.Include(c=>c.CardsList).ToList();
         }
 
-        public bool UpdateDB(int numPurchaseCenterIndex, PurchaseCenterEntity purchaseCenterEntity)
+        public bool UpdateDB(int numPurchaseCenter, PurchaseCenterEntity purchaseCenterEntity)
         {
-            try
-            {
-                //int index = IsExist(numPurchaseCenter);
-                if (purchaseCenterEntity.Id != 0)
-                    _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].Id = purchaseCenterEntity.Id;
+            PurchaseCenterEntity purchaseCenter = GetByIdDB(numPurchaseCenter);
 
-                if (purchaseCenterEntity.NumPurchaseCenter != 0)
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].NumPurchaseCenter = purchaseCenterEntity.NumPurchaseCenter;
+            if (purchaseCenterEntity.NumPurchaseCenter != 0 && purchaseCenterEntity.NumPurchaseCenter != purchaseCenter.NumPurchaseCenter)
+                purchaseCenter.NumPurchaseCenter = purchaseCenterEntity.NumPurchaseCenter;
 
-                if (!string.IsNullOrEmpty(purchaseCenterEntity.NamePurchasePoint))
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].NamePurchasePoint = purchaseCenterEntity.NamePurchasePoint;
+            if (purchaseCenterEntity.NamePurchasePoint != null && !string.IsNullOrEmpty(purchaseCenterEntity.NamePurchasePoint))
+                purchaseCenter.NamePurchasePoint = purchaseCenterEntity.NamePurchasePoint;
 
-                if (!string.IsNullOrEmpty(purchaseCenterEntity.Address))
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].Address = purchaseCenterEntity.Address;
+            if (!string.IsNullOrEmpty(purchaseCenterEntity.Address))
+                purchaseCenter.Address = purchaseCenterEntity.Address;
 
-                if (!string.IsNullOrEmpty(purchaseCenterEntity.City))
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].City = purchaseCenterEntity.City;
+            if (purchaseCenterEntity.City != null && !string.IsNullOrEmpty(purchaseCenterEntity.City))
+                purchaseCenter.City = purchaseCenterEntity.City;
 
-                if (!string.IsNullOrEmpty(purchaseCenterEntity.Phone))
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].Phone = purchaseCenterEntity.Phone;
+            if (!string.IsNullOrEmpty(purchaseCenterEntity.Phone))
+                purchaseCenter.Phone = purchaseCenterEntity.Phone;
 
-                if (!string.IsNullOrEmpty(purchaseCenterEntity.Email))
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].Email = purchaseCenterEntity.Email;
+            if (!string.IsNullOrEmpty(purchaseCenterEntity.Email))
+                purchaseCenter.Email = purchaseCenterEntity.Email;
 
-                if (purchaseCenterEntity.Quantity != 0)
-                     _dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndex].Quantity = purchaseCenterEntity.Quantity;
+            if (purchaseCenterEntity.Quantity != 0 && purchaseCenterEntity.Quantity != purchaseCenter.Quantity)
+                purchaseCenter.Quantity = purchaseCenterEntity.Quantity;
 
-                _dataContext.SaveChanges(); 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public bool DeleteDB(int numPurchaseCenterIndexDelete)
-        {
-            try
-            {
-                //PurchaseCenterEntity customer = _dataContext.PurchaseCentersList.ToList().Find(b => b.NumPurchaseCenter == numPurchaseCenter);
-                //_dataContext.PurchaseCentersList.Remove(customer);
-                _dataContext.PurchaseCentersList.Remove(_dataContext.PurchaseCentersList.ToList()[numPurchaseCenterIndexDelete]);
-                _dataContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return true;
         }
     }
 }

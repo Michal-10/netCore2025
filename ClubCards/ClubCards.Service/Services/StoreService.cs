@@ -1,5 +1,5 @@
-﻿using ClubCards.Core.Services;
-using ClubCards.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using System.Linq;
 using static System.Formats.Asn1.AsnWriter;
@@ -8,50 +8,58 @@ namespace ClubCardsProject.Services
 {
     public class StoreService:IStoreService
     {
-        readonly IRepository<StoreEntity> _storeService;
-        public StoreService(IRepository<StoreEntity> storeService)
+        private IRepositoryStore _storeRepository;
+        private IRepositoryManager _repositoryManager;
+        public StoreService(IRepositoryStore storeRepository, IRepositoryManager repositoryManager)
         {
-            _storeService = storeService;
+            _storeRepository = storeRepository;
+            _repositoryManager = repositoryManager;
         }
         public List<StoreEntity> GetStores()
         { 
-            return _storeService.GetAllDB();
+            return _storeRepository.GetAllDB();
         }
 
         public StoreEntity GetStoreById(int id)
         {
-            var data = _storeService.GetAllDB();
-            if (data == null || (data.Find(s=>s.Id==id)==null))
-                return null;
-            return _storeService.GetByIdDB(id);
+            //    var data = _storeService.GetAllDB();
+            //    if (data == null || (data.Find(s=>s.Id==id)==null))
+            //        return null;
+            return _storeRepository.GetByIdDB(id);
         }
 
-        public bool AddStore(StoreEntity store)
+        public bool AddStore(StoreEntity storeObj)
         {
-            int index = _storeService.IsExist(store.NumStore);
-            if (index == -1 && ValidationCheck.IsEmailValid(store.Email))
+            StoreEntity store = _storeRepository.GetByIdDB((int)storeObj.NumStore);
+            if (store == null && ValidationCheck.IsEmailValid(storeObj.Email))
             {
-                return _storeService.AddDB(store);
+                _storeRepository.AddDB(storeObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
-        public bool UpdateStore(uint numStore, StoreEntity store)
+        public bool UpdateStore(uint numStore, StoreEntity storeObj)
         {
-            int index = _storeService.IsExist(numStore);
-            if (index != -1)
+            StoreEntity store = _storeRepository.GetByIdDB((int)numStore);
+            if (store != null)
             {
-                return _storeService.UpdateDB(index, store);
+                _storeRepository.UpdateDB((int)numStore, storeObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
         public bool DeleteStore(uint numStore)
         {
-            int index= _storeService.IsExist(numStore);
-            if (index != -1)
+            StoreEntity store= _storeRepository.GetByIdDB((int)numStore);
+            if (store != null)
             {
-                return _storeService.DeleteDB(index);
+                _storeRepository.DeleteDB((int)numStore);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }

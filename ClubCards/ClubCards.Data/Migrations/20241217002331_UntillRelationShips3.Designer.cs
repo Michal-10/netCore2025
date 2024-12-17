@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubCards.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241204224035_Init")]
-    partial class Init
+    [Migration("20241217002331_UntillRelationShips3")]
+    partial class UntillRelationShips3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,30 +32,30 @@ namespace ClubCards.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("IdCard")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IdCustomer")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IdPurchaseCenter")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("NumBuying")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Sum")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("StoreId");
 
                     b.ToTable("BuyingsList");
                 });
@@ -71,24 +71,27 @@ namespace ClubCards.Data.Migrations
                     b.Property<DateTime>("CardValidity")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateOfPurchase")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("IdCustomer")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("NumCard")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PurchaseCenter")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PurchaseCenterId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Sum")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("PurchaseCenterId");
 
                     b.ToTable("CardsList");
                 });
@@ -108,11 +111,9 @@ namespace ClubCards.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("IdCustomer")
@@ -123,7 +124,6 @@ namespace ClubCards.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -153,7 +153,6 @@ namespace ClubCards.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NamePurchasePoint")
@@ -197,7 +196,6 @@ namespace ClubCards.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Manager")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -216,6 +214,59 @@ namespace ClubCards.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StoresList");
+                });
+
+            modelBuilder.Entity("ClubCardsProject.Entities.BuyingEntity", b =>
+                {
+                    b.HasOne("ClubCardsProject.Entities.CardEntity", "Card")
+                        .WithMany("Buyings")
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClubCardsProject.Entities.StoreEntity", "Store")
+                        .WithMany("ListBuying")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("ClubCardsProject.Entities.CardEntity", b =>
+                {
+                    b.HasOne("ClubCardsProject.Entities.CustomerEntity", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClubCardsProject.Entities.PurchaseCenterEntity", "PurchaseCenter")
+                        .WithMany("CardsList")
+                        .HasForeignKey("PurchaseCenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("PurchaseCenter");
+                });
+
+            modelBuilder.Entity("ClubCardsProject.Entities.CardEntity", b =>
+                {
+                    b.Navigation("Buyings");
+                });
+
+            modelBuilder.Entity("ClubCardsProject.Entities.PurchaseCenterEntity", b =>
+                {
+                    b.Navigation("CardsList");
+                });
+
+            modelBuilder.Entity("ClubCardsProject.Entities.StoreEntity", b =>
+                {
+                    b.Navigation("ListBuying");
                 });
 #pragma warning restore 612, 618
         }

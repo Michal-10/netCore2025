@@ -1,52 +1,63 @@
 ﻿using System.Linq;
 using ClubCardsProject.Entities;
-using ClubCards.Data;
 using ClubCards.Core.Services;
+using ClubCards.Core.Repositories;
 
 namespace ClubCardsProject.Services
 {
     public class BuyingService:IBuyingService
     {
-        private IRepository<BuyingEntity> _buyingService;
-        public BuyingService(IRepository<BuyingEntity> buyingService)
+        private IRepositoryBuying _buyingRepository;
+        private IRepositoryManager _repositoryManager;
+        public BuyingService(IRepositoryBuying buyingRepository, IRepositoryManager repositorymanager)
         {
-            _buyingService = buyingService;
+            _buyingRepository = buyingRepository;
+            _repositoryManager = repositorymanager;
         }
 
         public List<BuyingEntity> GetBuyings()
         {
-            return _buyingService.GetAllDB();
+            return _buyingRepository.GetAllDB();
         }
 
         public BuyingEntity GetBuyingById(int id)
         {
-            return _buyingService.GetByIdDB(id);
+            return _buyingRepository.GetByIdDB(id);
         }
 
-        public bool AddBuying(BuyingEntity buying)
+        public bool AddBuying(BuyingEntity buyingObj)
         {
-            int index = _buyingService.IsExist(buying.NumBuying);
-            if (index == -1 )
+            BuyingEntity buying = _buyingRepository.GetByIdDB((int)buyingObj.NumBuying);
+            if (buying == null)
             {
-                return _buyingService.AddDB(buying);
+                _buyingRepository.AddDB(buyingObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
-        public bool UpdateBuying(uint numBuying, BuyingEntity buying)
+        public bool UpdateBuying(uint numBuying, BuyingEntity buyingObj)
         {
-            int index = _buyingService.IsExist(numBuying);
-            if (index != -1)
-                return _buyingService.UpdateDB(index, buying);
+            BuyingEntity buying = _buyingRepository.GetByIdDB((int)numBuying);
+            if (buying != null)
+            //return _buyingRepository.UpdateDB(index, buying);
+            {
+                _buyingRepository.UpdateDB((int)numBuying, buyingObj);
+                _repositoryManager.save();
+                return true;
+            }
             return false;
         }
 
         public bool DeleteBuying(uint numBuying)
         {
-            int index = _buyingService.IsExist(numBuying);
-            if (index != -1)
+            BuyingEntity buying  = _buyingRepository.GetByIdDB((int)numBuying);
+            if (buying != null)
             {
-                return _buyingService.DeleteDB(index);
+                _buyingRepository.DeleteDB((int)numBuying);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }

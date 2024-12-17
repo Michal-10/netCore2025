@@ -29,7 +29,7 @@ namespace ClubCardsProject.Controllers
         [HttpGet("{numCard}")]
         public ActionResult GetById(int numCard)
         {
-            if (numCard < 0)
+            if (numCard <= 0)
                 return BadRequest();
             var card = _cardService.GetCardByID(numCard);
             if (card == null)

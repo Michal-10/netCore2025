@@ -13,22 +13,12 @@ namespace ClubCardsProject.Entities
         public string Name { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
-        [MaxLength(10)]
+        
+        [StringLength(10, MinimumLength = 8)]
         public string Phone { get; set; }
         public string Email { get; set; }
-        public string Manager { get; set; }
-        public StoreEntity() { }
-
-        public StoreEntity(int id,uint numStore, string name, string address, string city, string phone, string email, string manager)
-        {
-            Id= id;
-            NumStore = numStore;
-            Name = name;
-            Address = address;
-            City = city;
-            Phone = phone;
-            Email = email;
-            Manager = manager;
-        }
+        public string? Manager { get; set; }
+        public List<BuyingEntity> ListBuying { get; set; }
+        
     }
 }

@@ -28,7 +28,7 @@ namespace ClubCardsProject.Controllers
         public ActionResult<CustomerEntity> GetById(int idCustomer)
         {
             //if (tz < 0)
-            if (idCustomer < 0)
+            if (idCustomer <= 0)
                 return BadRequest();
             var customer = _customerService.GetCustomerById(idCustomer);
             if (customer == null)

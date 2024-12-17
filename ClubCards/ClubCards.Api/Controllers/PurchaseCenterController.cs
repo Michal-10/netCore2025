@@ -28,7 +28,7 @@ namespace ClubCardsProject.Controllers
         [HttpGet("{numPurchaseCenter}")]
         public ActionResult<PurchaseCenterEntity> GetById(int numPurchaseCenter)
         {
-            if (numPurchaseCenter < 0)
+            if (numPurchaseCenter <= 0)
                 return BadRequest();
             var purchaseCenter = _purchaseCenterService.GetPurchaseCenterByID(numPurchaseCenter);
             if (purchaseCenter == null)

@@ -1,56 +1,66 @@
-﻿using ClubCards.Core.Services;
-using ClubCards.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCards.Core.Services;
+//using ClubCards.Data;
 using ClubCardsProject.Entities;
 
 namespace ClubCardsProject.Services
 {
     public class CustomerService : ICustomerService
     {
-        readonly IRepository<CustomerEntity> _customerService;
-        public CustomerService(IRepository<CustomerEntity> customerService)
+        private IRepositoryCustomer _customerRepository;
+        private IRepositoryManager _repositoryManager;
+        public CustomerService(IRepositoryCustomer customerRepository, IRepositoryManager repositoryManager)
         {
-            _customerService = customerService;
+            _customerRepository = customerRepository;
+            _repositoryManager = repositoryManager;
         }
 
         public List<CustomerEntity> GetCustomers()
         {
-            return _customerService.GetAllDB();
+            return _customerRepository.GetAllDB();
         }
 
         public CustomerEntity GetCustomerById(int id)
         {
-            var data = _customerService.GetAllDB();
-            if (data == null || (data.FindIndex(c => c.Id == id) == -1))
-                return null;
-            return _customerService.GetByIdDB(id);
+            //var data = _customerService.GetAllDB();
+            //if (data == null || (data.FindIndex(c => c.Id == id) == -1))
+            //    return null;
+            return _customerRepository.GetByIdDB(id);
         }
 
-        public bool AddCustomer(CustomerEntity customer)
+        public bool AddCustomer(CustomerEntity customerObj)
         {
-            int index = _customerService.IsExist((uint)customer.Id);
-            if (index == -1 && ValidationCheck.IsEmailValid(customer.Email) && ValidationCheck.IsTzValid(customer.Tz))
+            CustomerEntity customer = _customerRepository.GetByIdDB((int)customerObj.Id);
+            
+            if (customer == null && ValidationCheck.IsEmailValid(customerObj.Email) && ValidationCheck.IsTzValid(customerObj.Tz))
             {
-                return _customerService.AddDB(customer);
+                _customerRepository.AddDB(customerObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
-        public bool UpdateCustomer(uint idCustomer, CustomerEntity customer)
+        public bool UpdateCustomer(uint idCustomer, CustomerEntity customerObj)
         {
-            int index = _customerService.IsExist(idCustomer);
-            if (index != -1)
+            CustomerEntity customer = _customerRepository.GetByIdDB((int)idCustomer);
+            if (customer != null)
             {
-                return _customerService.UpdateDB(index, customer);
+                _customerRepository.UpdateDB((int)idCustomer, customerObj);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }
 
         public bool DeleteCustomer(uint idCustomer)
         {
-            int index = _customerService.IsExist(idCustomer);
-            if ( index!= -1)
+            CustomerEntity customer = _customerRepository.GetByIdDB((int)idCustomer);
+            if (customer != null)
             {
-                return _customerService.DeleteDB(index);
+                _customerRepository.DeleteDB((int)idCustomer);
+                _repositoryManager.save();
+                return true;
             }
             return false;
         }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClubCardsProject.Entities
 {
@@ -12,22 +13,11 @@ namespace ClubCardsProject.Entities
         public string NamePurchasePoint { get; set; }//שם מוקד רכישה
         public string Address { get; set; }
         public string City { get; set; }
-        [MaxLength(10)]
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public int Quantity { get; set; }
-        public PurchaseCenterEntity() { }
 
-        public PurchaseCenterEntity(int id,uint numPurchaseCenter, string namePurchasePoint, string address, string city, string phone, string email, int quantity)
-        {
-            Id = id;
-            NumPurchaseCenter = numPurchaseCenter;
-            NamePurchasePoint = namePurchasePoint;
-            Address = address;
-            City = city;
-            Phone = phone;
-            Email = email;
-            Quantity = quantity;
-        }
+        [StringLength(10, MinimumLength = 8)]
+        public string Phone { get; set; }
+        public string? Email { get; set; }
+        public int Quantity { get; set; }
+        public List<CardEntity> CardsList { get; set; }
     }
 }

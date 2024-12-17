@@ -1,5 +1,7 @@
-﻿using ClubCardsProject.Data;
+﻿using ClubCards.Core.Repositories;
+using ClubCardsProject.Data;
 using ClubCardsProject.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,92 +11,47 @@ using System.Threading.Tasks;
 
 namespace ClubCards.Data.Repositories
 {
-    public class CardRepository : IRepository<CardEntity>
+    public class CardRepository : RepositoryGeneric<CardEntity>, IRepositoryCard
     {
-        private readonly DataContext _dataContext;
-        public CardRepository(DataContext dataContext)
+        public CardRepository(DataContext context) : base(context)
         {
-            _dataContext = dataContext;
         }
 
-        public List<CardEntity> GetAllDB()
+        override public List<CardEntity> GetAllDB()
         {
-            return _dataContext.CardsList.ToList();
-        }
-        public CardEntity GetByIdDB(int id)
-        {
-            return _dataContext.CardsList.Where(b => b.Id == id).FirstOrDefault();
-        }
-        public int IsExist(uint numCard)
-        {
-            return _dataContext.CardsList.ToList().FindIndex(c => c.NumCard == numCard);
-        }
-        public bool AddDB(CardEntity cardEntity)
-        {
-            try
-            {
-                 _dataContext.CardsList.Add(cardEntity);
-                 _dataContext.SaveChanges();
-                 return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return _dbSet.ToList();//.Include(c=>c.PurchaseCenterId).Include(c=>c.CustomerId).ToList();
         }
 
-        public bool UpdateDB(int numCardIndex, CardEntity cardEntity)
+        public bool UpdateDB(int numCard, CardEntity cardEntity)
         {
-            try
-            {
-                //int index = IsExist(numCard);
-                    //בעיקרון אי אפשר לשנות ID
-               if (cardEntity.Id != 0)
-                   _dataContext.BuyingsList.ToList()[numCardIndex].Id = cardEntity.Id;
+            CardEntity card = GetByIdDB(numCard);
 
-               if (cardEntity.NumCard != 0)
-                   _dataContext.CardsList.ToList()[numCardIndex].NumCard = cardEntity.NumCard;
+            if (cardEntity.CustomerId > 0 && _dbSet.Find(cardEntity.CustomerId) != null)
+                card.CustomerId = cardEntity.CustomerId;
 
-               if (cardEntity.IdCustomer != 0)
-                   _dataContext.CardsList.ToList()[numCardIndex].IdCustomer = cardEntity.IdCustomer;
+            if (cardEntity.PurchaseCenterId > 0 && _dbSet.Find(cardEntity.PurchaseCenterId) != null)
+                card.PurchaseCenterId = cardEntity.PurchaseCenterId;
 
-               if (DateTime.Compare(cardEntity.DateOfPurchase, DateTime.Now) != 0)
-                   _dataContext.CardsList.ToList()[numCardIndex].DateOfPurchase = cardEntity.DateOfPurchase;
+            if (cardEntity.NumCard != card.NumCard)
+                card.NumCard = cardEntity.NumCard;
 
-               if (DateTime.Compare(cardEntity.CardValidity, DateTime.Now) != 0)
-                    _dataContext.CardsList.ToList()[numCardIndex].CardValidity = cardEntity.CardValidity;
+            if (cardEntity.CustomerId != card.CustomerId)
+                card.CustomerId = cardEntity.CustomerId;
 
-               if (string.IsNullOrEmpty(cardEntity.PurchaseCenter))
-                    _dataContext.CardsList.ToList()[numCardIndex].PurchaseCenter = cardEntity.PurchaseCenter;
+            if (DateTime.Compare(cardEntity.DateOfPurchase, DateTime.Now) != 0)
+                card.DateOfPurchase = cardEntity.DateOfPurchase;
 
-               if (cardEntity.Sum != 0)
-                    _dataContext.CardsList.ToList()[numCardIndex].Sum = cardEntity.Sum;
+            if (DateTime.Compare(cardEntity.CardValidity, DateTime.Now) != 0)
+                card.CardValidity = cardEntity.CardValidity;
 
-                _dataContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            if (cardEntity.PurchaseCenterId != card.PurchaseCenterId)
+                card.PurchaseCenterId = cardEntity.PurchaseCenterId;
+
+            if (cardEntity.Sum != 0 && cardEntity.Sum != card.Sum)
+                card.Sum = cardEntity.Sum;
+
+            return true;
         }
 
-        public bool DeleteDB(int numCardIndexDelete)
-        {
-            try
-            {
-               // CardEntity card = _dataContext.CardsList.ToList().Find(b => b.NumCard == numCard);
-               // _dataContext.CardsList.Remove(card);
-                _dataContext.CardsList.Remove(_dataContext.CardsList.ToList()[numCardIndexDelete]);
-                _dataContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        
     }
 }

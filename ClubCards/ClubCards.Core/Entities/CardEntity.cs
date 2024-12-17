@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClubCardsProject.Entities
 {
@@ -10,28 +11,22 @@ namespace ClubCardsProject.Entities
         [Key]
         public int Id { get; set; }
         [Required]
-        //public uint Id { get; set; }
         public uint NumCard { get; set; }// מספר כרטיס
-        [Required]
-        public uint IdCustomer { get; set; }//מזהה לקוח
+        
+        public int CustomerId { get; set; }//מזהה לקוח
+        [ForeignKey(nameof(CustomerId))]
+        public CustomerEntity Customer { get; set; }
+
         public DateTime DateOfPurchase { get; set; } //תאריך רכישה
         public DateTime CardValidity { get; set; } //תוקף כרטיס
-        public string PurchaseCenter { get; set; } //מוקד רכישה
+        public int PurchaseCenterId { get; set; } //מוקד רכישה
+        //[ForeignKey(nameof(IdPurchaseCenter))]
+        public PurchaseCenterEntity PurchaseCenter { get; set; }
+
         [Precision(18, 4)]
         public decimal Sum { get; set; }// סכום
+
+        public List<BuyingEntity> Buyings { get; set; }
         
-
-        public CardEntity() { }
-
-        public CardEntity(int id, uint numCard, DateTime dateOfPurchase, DateTime cardValidity, string purchaseCenter, decimal sum, uint idCustomer)
-        {
-            Id= id; 
-            NumCard = numCard;
-            DateOfPurchase = dateOfPurchase;
-            CardValidity = cardValidity;
-            PurchaseCenter = purchaseCenter;
-            Sum = sum;
-            IdCustomer = idCustomer;
-        }
     }
 }

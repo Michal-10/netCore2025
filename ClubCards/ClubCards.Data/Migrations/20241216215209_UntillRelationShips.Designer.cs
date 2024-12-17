@@ -4,6 +4,7 @@ using ClubCardsProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubCards.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241216215209_UntillRelationShips")]
+    partial class UntillRelationShips
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +37,12 @@ namespace ClubCards.Data.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("IdCard")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdStore")
+                        .HasColumnType("int");
 
                     b.Property<long>("NumBuying")
                         .HasColumnType("bigint");
@@ -242,7 +250,7 @@ namespace ClubCards.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ClubCardsProject.Entities.PurchaseCenterEntity", "PurchaseCenter")
-                        .WithMany("CardsList")
+                        .WithMany("Cards")
                         .HasForeignKey("PurchaseCenterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -259,7 +267,7 @@ namespace ClubCards.Data.Migrations
 
             modelBuilder.Entity("ClubCardsProject.Entities.PurchaseCenterEntity", b =>
                 {
-                    b.Navigation("CardsList");
+                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("ClubCardsProject.Entities.StoreEntity", b =>
