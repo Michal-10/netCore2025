@@ -13,14 +13,14 @@ namespace ClubCards.Data.Repositories
         {
         }
 
-        override public List<BuyingEntity> GetAllDB()
+        public IEnumerable<BuyingEntity> GetAllDB()
         {
-            return _dbSet.ToList();//Include(b=>b.CardId).Include(b=>b.StoreId).ToList();
+            return _dbSet.Include(c => c.Card).Include(b=>b.Store);
         }
 
         public bool UpdateDB(int numBuying, BuyingEntity buyingEntity)
         {
-            BuyingEntity buying = GetByIdDB(numBuying);                 //int index = IsExist(numBuying);
+            BuyingEntity buying = GetByIdDB(numBuying);    
 
             if (buyingEntity.CardId >= 0 && _dbSet.Find(buyingEntity.CardId) != null)
                 buying.CardId = buyingEntity.CardId;

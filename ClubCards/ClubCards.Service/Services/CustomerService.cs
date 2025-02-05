@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.Repositories;
+﻿using AutoMapper;
+using ClubCards.Core.DTOs;
+using ClubCards.Core.Repositories;
 using ClubCards.Core.Services;
 //using ClubCards.Data;
 using ClubCardsProject.Entities;
@@ -7,34 +9,34 @@ namespace ClubCardsProject.Services
 {
     public class CustomerService : ICustomerService
     {
-        private IRepositoryCustomer _customerRepository;
         private IRepositoryManager _repositoryManager;
-        public CustomerService(IRepositoryCustomer customerRepository, IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+
+        public CustomerService( IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _customerRepository = customerRepository;
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public List<CustomerEntity> GetCustomers()
+        public IEnumerable<CustomerDTO> GetCustomers()
         {
-            return _customerRepository.GetAllDB();
+            var customers = _repositoryManager.Customers.GetDB();
+            Console.WriteLine(customers.GetType());
+            return _mapper.Map<IEnumerable<CustomerDTO>>(customers);
         }
 
-        public CustomerEntity GetCustomerById(int id)
+        public CustomerDTO GetCustomerById(int id)
         {
-            //var data = _customerService.GetAllDB();
-            //if (data == null || (data.FindIndex(c => c.Id == id) == -1))
-            //    return null;
-            return _customerRepository.GetByIdDB(id);
+            return _mapper.Map<CustomerDTO>(_repositoryManager.Customers.GetByIdDB(id));
         }
 
         public bool AddCustomer(CustomerEntity customerObj)
         {
-            CustomerEntity customer = _customerRepository.GetByIdDB((int)customerObj.Id);
+            CustomerEntity customer = _repositoryManager.Customers.GetByIdDB((int)customerObj.Id);
             
-            if (customer == null && ValidationCheck.IsEmailValid(customerObj.Email) && ValidationCheck.IsTzValid(customerObj.Tz))
+            if (customer == null && customerObj.Email.IsEmailValid() && customerObj.Tz.IsTzValid())
             {
-                _customerRepository.AddDB(customerObj);
+                _repositoryManager.Customers.AddDB(customerObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -43,10 +45,10 @@ namespace ClubCardsProject.Services
 
         public bool UpdateCustomer(uint idCustomer, CustomerEntity customerObj)
         {
-            CustomerEntity customer = _customerRepository.GetByIdDB((int)idCustomer);
+            CustomerEntity customer = _repositoryManager.Customers.GetByIdDB((int)idCustomer);
             if (customer != null)
             {
-                _customerRepository.UpdateDB((int)idCustomer, customerObj);
+                _repositoryManager.Customers.UpdateDB((int)idCustomer, customerObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -55,10 +57,10 @@ namespace ClubCardsProject.Services
 
         public bool DeleteCustomer(uint idCustomer)
         {
-            CustomerEntity customer = _customerRepository.GetByIdDB((int)idCustomer);
+            CustomerEntity customer = _repositoryManager.Customers.GetByIdDB((int)idCustomer);
             if (customer != null)
             {
-                _customerRepository.DeleteDB((int)idCustomer);
+                _repositoryManager.Customers.DeleteDB((int)idCustomer);
                 _repositoryManager.save();
                 return true;
             }

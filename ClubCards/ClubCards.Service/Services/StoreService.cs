@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.Repositories;
+﻿using AutoMapper;
+using ClubCards.Core.DTOs;
+using ClubCards.Core.Repositories;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using System.Linq;
@@ -8,32 +10,30 @@ namespace ClubCardsProject.Services
 {
     public class StoreService:IStoreService
     {
-        private IRepositoryStore _storeRepository;
         private IRepositoryManager _repositoryManager;
-        public StoreService(IRepositoryStore storeRepository, IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+        public StoreService( IRepositoryManager repositoryManager,IMapper mapper)
         {
-            _storeRepository = storeRepository;
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
-        public List<StoreEntity> GetStores()
-        { 
-            return _storeRepository.GetAllDB();
+        public IEnumerable<StoreDTO> GetStores()
+        {
+            var stores = _repositoryManager.Stores.GetAllDB();
+            return _mapper.Map<IEnumerable<StoreDTO>>(stores);
         }
 
-        public StoreEntity GetStoreById(int id)
+        public StoreDTO? GetStoreById(int id)
         {
-            //    var data = _storeService.GetAllDB();
-            //    if (data == null || (data.Find(s=>s.Id==id)==null))
-            //        return null;
-            return _storeRepository.GetByIdDB(id);
+            return _mapper.Map<StoreDTO>(_repositoryManager.Stores.GetByIdDB(id));
         }
 
         public bool AddStore(StoreEntity storeObj)
         {
-            StoreEntity store = _storeRepository.GetByIdDB((int)storeObj.NumStore);
-            if (store == null && ValidationCheck.IsEmailValid(storeObj.Email))
+            StoreEntity? store = _repositoryManager.Stores.GetByIdDB((int)storeObj.NumStore);
+            if (store == null && storeObj.Email.IsEmailValid())
             {
-                _storeRepository.AddDB(storeObj);
+                _repositoryManager.Stores.AddDB(storeObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -42,10 +42,10 @@ namespace ClubCardsProject.Services
 
         public bool UpdateStore(uint numStore, StoreEntity storeObj)
         {
-            StoreEntity store = _storeRepository.GetByIdDB((int)numStore);
+            StoreEntity? store = _repositoryManager.Stores.GetByIdDB((int)numStore);
             if (store != null)
             {
-                _storeRepository.UpdateDB((int)numStore, storeObj);
+                _repositoryManager.Stores.UpdateDB((int)numStore, storeObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -54,10 +54,10 @@ namespace ClubCardsProject.Services
 
         public bool DeleteStore(uint numStore)
         {
-            StoreEntity store= _storeRepository.GetByIdDB((int)numStore);
+            StoreEntity? store = _repositoryManager.Stores.GetByIdDB((int)numStore);
             if (store != null)
             {
-                _storeRepository.DeleteDB((int)numStore);
+                _repositoryManager.Stores.DeleteDB((int)numStore);
                 _repositoryManager.save();
                 return true;
             }

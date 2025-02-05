@@ -22,8 +22,6 @@ namespace ClubCards.Data.Repositories
 
         public bool UpdateDB(int idCustomer, CustomerEntity customerEntity)
         {
-            //try
-            //{
             CustomerEntity customer = GetByIdDB(idCustomer);
 
             if (customerEntity.Tz != null && !string.IsNullOrEmpty(customerEntity.Tz))

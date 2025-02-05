@@ -2,35 +2,39 @@
 using ClubCardsProject.Entities;
 using ClubCards.Core.Services;
 using ClubCards.Core.Repositories;
+using AutoMapper;
+using ClubCards.Core.DTOs;
 
 namespace ClubCardsProject.Services
 {
     public class BuyingService:IBuyingService
     {
-        private IRepositoryBuying _buyingRepository;
         private IRepositoryManager _repositoryManager;
-        public BuyingService(IRepositoryBuying buyingRepository, IRepositoryManager repositorymanager)
+        readonly IMapper _mapper;
+
+        public BuyingService( IRepositoryManager repositorymanager,IMapper mapper)
         {
-            _buyingRepository = buyingRepository;
             _repositoryManager = repositorymanager;
+            _mapper = mapper;
         }
 
-        public List<BuyingEntity> GetBuyings()
+        public IEnumerable<BuyingDTO> GetBuyings()
         {
-            return _buyingRepository.GetAllDB();
+            var buyings = _repositoryManager.Buyings.GetAllDB();
+            return _mapper.Map<IEnumerable<BuyingDTO>>(buyings);
         }
 
-        public BuyingEntity GetBuyingById(int id)
+        public BuyingDTO? GetBuyingById(int id)
         {
-            return _buyingRepository.GetByIdDB(id);
+            return _mapper.Map<BuyingDTO>(_repositoryManager.Buyings.GetByIdDB(id));
         }
 
         public bool AddBuying(BuyingEntity buyingObj)
         {
-            BuyingEntity buying = _buyingRepository.GetByIdDB((int)buyingObj.NumBuying);
+            BuyingEntity? buying = _repositoryManager.Buyings.GetByIdDB((int)buyingObj.NumBuying);
             if (buying == null)
             {
-                _buyingRepository.AddDB(buyingObj);
+                _repositoryManager.Buyings.AddDB(buyingObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -39,11 +43,10 @@ namespace ClubCardsProject.Services
 
         public bool UpdateBuying(uint numBuying, BuyingEntity buyingObj)
         {
-            BuyingEntity buying = _buyingRepository.GetByIdDB((int)numBuying);
+            BuyingEntity? buying = _repositoryManager.Buyings.GetByIdDB((int)numBuying);
             if (buying != null)
-            //return _buyingRepository.UpdateDB(index, buying);
             {
-                _buyingRepository.UpdateDB((int)numBuying, buyingObj);
+                _repositoryManager.Buyings.UpdateDB((int)numBuying, buyingObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -52,10 +55,10 @@ namespace ClubCardsProject.Services
 
         public bool DeleteBuying(uint numBuying)
         {
-            BuyingEntity buying  = _buyingRepository.GetByIdDB((int)numBuying);
+            BuyingEntity? buying = _repositoryManager.Buyings.GetByIdDB((int)numBuying);
             if (buying != null)
-            {
-                _buyingRepository.DeleteDB((int)numBuying);
+            { 
+                _repositoryManager.Buyings.DeleteDB((int)numBuying);
                 _repositoryManager.save();
                 return true;
             }

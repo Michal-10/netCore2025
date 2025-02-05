@@ -1,4 +1,5 @@
-﻿using ClubCards.Core.Services;
+﻿using ClubCards.Core.DTOs;
+using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,15 +19,15 @@ namespace ClubCardsProject.Controllers
 
         // GET: api/<PurchaseCenterController>
         [HttpGet]
-        public ActionResult<List<PurchaseCenterEntity>> Get()
+        public ActionResult<List<PurchaseCenterDTO>> Get()
         {
-            return _purchaseCenterService.GetPurchaseCenters();
+            return _purchaseCenterService.GetPurchaseCenters().ToList();
 
         }
 
         // GET api/<PurchaseCenterController>/5
         [HttpGet("{numPurchaseCenter}")]
-        public ActionResult<PurchaseCenterEntity> GetById(int numPurchaseCenter)
+        public ActionResult<PurchaseCenterDTO> GetById(int numPurchaseCenter)
         {
             if (numPurchaseCenter <= 0)
                 return BadRequest();

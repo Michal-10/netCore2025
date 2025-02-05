@@ -9,9 +9,8 @@ namespace ClubCards.Core.Repositories
 {
     public interface IRepositoryGeneric<T>
     {
-         List<T> GetAllDB();
+         IEnumerable<T> GetDB();
          T? GetByIdDB(int id);
-        //public T IsExist(int numUniq);
          bool AddDB(T buyingEntity);
          bool DeleteDB(int id);
 

@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.Repositories;
+﻿using AutoMapper;
+using ClubCards.Core.DTOs;
+using ClubCards.Core.Repositories;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using System;
@@ -7,32 +9,31 @@ namespace ClubCardsProject.Services
 {
     public class PurchaseCenterService:IPurchaseCenterService
     {
-        private IRepositoryPurchaseCenter _prchaseCenterRepository;
         private IRepositoryManager _repositoryManager;
-        public PurchaseCenterService(IRepositoryPurchaseCenter prchaseCenterRepository, IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+
+        public PurchaseCenterService( IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _prchaseCenterRepository = prchaseCenterRepository;
             _repositoryManager = repositoryManager;  
+            _mapper = mapper;
         }
-        public List<PurchaseCenterEntity> GetPurchaseCenters()
+        public IEnumerable<PurchaseCenterDTO> GetPurchaseCenters()
         {
-           return _prchaseCenterRepository.GetAllDB();
+            var purchaseCenters = _repositoryManager.PurchaseCenters.GetAllDB();
+            return _mapper.Map<IEnumerable<PurchaseCenterDTO>>(purchaseCenters);
         }
 
-        public PurchaseCenterEntity GetPurchaseCenterByID(int id)
+        public PurchaseCenterDTO? GetPurchaseCenterByID(int id)
         {
-            //var data=_purchaseCenterService.GetAllDB();
-            //if (data == null || (data.FindIndex(p=>p.Id==id)==-1))
-            //    return null;
-            return _prchaseCenterRepository.GetByIdDB(id);
+            return _mapper.Map<PurchaseCenterDTO>(_repositoryManager.PurchaseCenters.GetByIdDB(id));
         }
 
         public bool AddPurchaseCenter(PurchaseCenterEntity purchaseCenterObj)
         {
-            PurchaseCenterEntity purchaseCenter = _prchaseCenterRepository.GetByIdDB((int)purchaseCenterObj.NumPurchaseCenter);
-            if (purchaseCenter ==null && ValidationCheck.IsEmailValid(purchaseCenterObj.Email) )
+            PurchaseCenterEntity? purchaseCenter = _repositoryManager.PurchaseCenters.GetByIdDB((int)purchaseCenterObj.NumPurchaseCenter);
+            if (purchaseCenter ==null && purchaseCenterObj.Email.IsEmailValid() )
             {
-                _prchaseCenterRepository.AddDB(purchaseCenterObj);
+                _repositoryManager.PurchaseCenters.AddDB(purchaseCenterObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -41,10 +42,10 @@ namespace ClubCardsProject.Services
 
         public bool UpdatePurchaseCenter(uint numPurchaseCenter, PurchaseCenterEntity purchaseCenterObj)
         {
-            PurchaseCenterEntity purchaseCenter = _prchaseCenterRepository.GetByIdDB((int)numPurchaseCenter);
+            PurchaseCenterEntity? purchaseCenter = _repositoryManager.PurchaseCenters.GetByIdDB((int)numPurchaseCenter);
             if (purchaseCenter != null)
             {
-                _prchaseCenterRepository.UpdateDB((int)numPurchaseCenter, purchaseCenterObj);
+                _repositoryManager.PurchaseCenters.UpdateDB((int)numPurchaseCenter, purchaseCenterObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -53,10 +54,10 @@ namespace ClubCardsProject.Services
 
         public bool DeletePurchaseCentere(uint numPurchaseCenter)
         {
-            PurchaseCenterEntity purchaseCenter = _prchaseCenterRepository.GetByIdDB((int)numPurchaseCenter);
+            PurchaseCenterEntity? purchaseCenter = _repositoryManager.PurchaseCenters.GetByIdDB((int)numPurchaseCenter);
             if (purchaseCenter != null)
             {
-                _prchaseCenterRepository.DeleteDB((int)numPurchaseCenter);
+                _repositoryManager.PurchaseCenters.DeleteDB((int)numPurchaseCenter);
                 _repositoryManager.save();
                 return true;
             }

@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.Repositories;
+﻿using AutoMapper;
+using ClubCards.Core.DTOs;
+using ClubCards.Core.Repositories;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using System.Linq;
@@ -7,33 +9,31 @@ namespace ClubCardsProject.Services
 {
     public class CardService:ICardService
     {
-        private IRepositoryCard _cardRepository;
         private IRepositoryManager _repositoryManager;
-        public CardService(IRepositoryCard cardRepository, IRepositoryManager repositoryManager)
+        readonly IMapper _mapper;
+        public CardService( IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _cardRepository = cardRepository;
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public List<CardEntity> GetCards()
+        public IEnumerable<CardDTO> GetCards()
         {
-            return _cardRepository.GetAllDB();
+            var cards = _repositoryManager.Cards.GetAllDB();
+            return _mapper.Map<IEnumerable<CardDTO>>(cards);
         }
 
-        public CardEntity GetCardByID(int id)
+        public CardDTO? GetCardByID(int id)
         {
-            //var data = _cardService.GetAllDB();
-            //if (data == null || (data.FindIndex(c => c.Id == id) == -1))
-            //    return null;
-            return _cardRepository.GetByIdDB(id);
+            return _mapper.Map<CardDTO>(_repositoryManager.Cards.GetByIdDB(id));
         }
 
         public bool AddCard(CardEntity cardObj)
         {
-            CardEntity card = _cardRepository.GetByIdDB((int)cardObj.NumCard);
+            CardEntity? card = _repositoryManager.Cards.GetByIdDB((int)cardObj.NumCard);
             if (card == null)
             {
-                _cardRepository.AddDB(cardObj);
+                _repositoryManager.Cards.AddDB(cardObj);
                 _repositoryManager.save();
                 return true;
             }
@@ -43,10 +43,10 @@ namespace ClubCardsProject.Services
 
         public bool UpdateCard(uint numCard, CardEntity cardObj)
         {
-            CardEntity card = _cardRepository.GetByIdDB((int)numCard);
+            CardEntity? card = _repositoryManager.Cards.GetByIdDB((int)numCard);
             if (card != null)
             {
-                _cardRepository.UpdateDB((int)numCard, cardObj);
+                _repositoryManager.Cards.UpdateDB((int)numCard, cardObj);
                 _repositoryManager.save() ;
                 return true;
             }
@@ -55,10 +55,10 @@ namespace ClubCardsProject.Services
 
         public bool DeleteCard(uint numCard)
         {  
-            CardEntity card= _cardRepository.GetByIdDB((int)numCard);
+            CardEntity? card = _repositoryManager.Cards.GetByIdDB((int)numCard);
             if (card !=null)
             {
-                _cardRepository.DeleteDB((int)numCard);
+                _repositoryManager.Cards.DeleteDB((int)numCard);
                 _repositoryManager.save();
                 return true;
             }

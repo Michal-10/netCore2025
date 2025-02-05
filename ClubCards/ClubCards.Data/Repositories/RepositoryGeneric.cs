@@ -17,9 +17,9 @@ namespace ClubCards.Data.Repositories
         {
             _dbSet = context.Set<T>();
         }
-        virtual public List<T> GetAllDB()
+        virtual public IEnumerable<T> GetDB()
         {
-           return _dbSet.ToList();
+            return _dbSet;
         }
 
         public T? GetByIdDB(int id)

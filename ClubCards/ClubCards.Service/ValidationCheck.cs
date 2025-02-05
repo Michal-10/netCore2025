@@ -3,26 +3,35 @@ namespace ClubCardsProject.Entities
 {
     public static class ValidationCheck 
     {
-        public static bool IsTzValid(string value) 
+        public static bool IsTzValid( this string value) 
         { 
-            if (string.IsNullOrEmpty(value) || value.Length != 9) 
+            // בדיקה ראשונית: האם המספר קיים באורך הנכון
+            if (string.IsNullOrEmpty(value) || value.Length != 9)
                 return false;
+
             int sum = 0;
+
+            // חישוב ספרת הביקורת
             for (int i = 0; i < 9; i++)
             {
-                if (i%2==0)
-                    sum+=(2* value[i]);
-                else
-                    sum += value[i];
-            }
-            if(sum>100)
-                sum= sum/100+sum %10+sum /10%10;
-            else 
-                sum=sum/10+sum %10;
-            return sum == 10;
+                // המרת תווים למספרים
+                int digit = value[i] - '0';
 
+                // הכפלה לסירוגין
+                int multiplied = (i % 2 == 0) ? digit : digit * 2;
+
+                // אם התוצאה דו-ספרתית, חיבור ספרותיה
+                if (multiplied > 9)
+                    multiplied = (multiplied / 10) + (multiplied % 10);
+
+                // הוספת התוצאה לסכום הכללי
+                sum += multiplied;
+            }
+
+            // המספר חוקי אם השארית של החלוקה ב-10 היא 0
+            return (sum % 10 == 0);
         }
-        public static bool IsEmailValid(string value)
+        public static bool IsEmailValid(this string value)
         {
             if (value == null)
                 return false;

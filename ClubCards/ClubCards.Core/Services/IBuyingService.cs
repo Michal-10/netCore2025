@@ -1,4 +1,5 @@
-﻿using ClubCardsProject.Entities;
+﻿using ClubCards.Core.DTOs;
+using ClubCardsProject.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace ClubCards.Core.Services
 {
     public interface IBuyingService
     {
-        public List<BuyingEntity> GetBuyings();
-        public BuyingEntity GetBuyingById(int id);
+        public IEnumerable<BuyingDTO> GetBuyings();
+        public BuyingDTO GetBuyingById(int id);
         public bool AddBuying(BuyingEntity buying);
         public bool UpdateBuying(uint id, BuyingEntity buying);
         public bool DeleteBuying(uint id);

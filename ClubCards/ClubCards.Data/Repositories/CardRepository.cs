@@ -17,9 +17,9 @@ namespace ClubCards.Data.Repositories
         {
         }
 
-        override public List<CardEntity> GetAllDB()
+        public IEnumerable<CardEntity> GetAllDB()
         {
-            return _dbSet.ToList();//.Include(c=>c.PurchaseCenterId).Include(c=>c.CustomerId).ToList();
+            return _dbSet.Include(c=>c.PurchaseCenter).Include(c=>c.Customer).Include(c => c.Buyings);
         }
 
         public bool UpdateDB(int numCard, CardEntity cardEntity)

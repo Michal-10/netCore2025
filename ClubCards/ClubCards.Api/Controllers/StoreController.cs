@@ -1,4 +1,5 @@
-﻿using ClubCards.Core.Services;
+﻿using ClubCards.Core.DTOs;
+using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,18 +19,18 @@ namespace ClubCardsProject.Controllers
 
         // GET: api/<StoreController>
         [HttpGet]
-        public ActionResult<List<StoreEntity>> Get()
+        public ActionResult<List<StoreDTO>> Get()
         {
-            return _storeService.GetStores();
+            return _storeService.GetStores().ToList();
         }
 
         // GET api/<StoreController>/5
-        [HttpGet("{numStore}")]
-        public ActionResult<StoreEntity> GetById(int numStore)
+        [HttpGet("{id}")]
+        public ActionResult<StoreDTO> GetById(int id)
         {
-            if (numStore <= 0)
+            if (id <= 0)
                 return BadRequest();
-            var store = _storeService.GetStoreById(numStore);
+            var store = _storeService.GetStoreById(id);
             if (store == null)
                 return NotFound();
             return store;
@@ -56,10 +57,10 @@ namespace ClubCardsProject.Controllers
         }
 
         // DELETE api/<StoreController>/5
-        [HttpDelete("{numStore}")]
-        public ActionResult Delete(uint numStore)
+        [HttpDelete("{id}")]
+        public ActionResult Delete(uint id)
         {
-            bool isSuccess = _storeService.DeleteStore(numStore);
+            bool isSuccess = _storeService.DeleteStore(id);
             if (isSuccess)
                 return Ok(true);
             return NotFound(); ;

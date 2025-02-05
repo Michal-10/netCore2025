@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.Services;
+﻿using AutoMapper;
+using ClubCards.Core.DTOs;
+using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +20,14 @@ namespace ClubCardsProject.Controllers
 
         // GET: api/<BuyingController>
         [HttpGet]
-        public ActionResult<List<BuyingEntity>> Get()
+        public ActionResult<List<BuyingDTO>> Get()
         {
-            return _buyingService.GetBuyings();
+            return _buyingService.GetBuyings().ToList();
         }
 
         // GET api/<BuyingController>/5
         [HttpGet("{numBuying}")]
-        public ActionResult<BuyingEntity> GetById(int numBuying)
+        public ActionResult<BuyingDTO> GetById(int numBuying)
         {
             if (numBuying <= 0)
                 return BadRequest();

@@ -1,4 +1,5 @@
-﻿using ClubCardsProject.Entities;
+﻿using ClubCards.Core.DTOs;
+using ClubCardsProject.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace ClubCards.Core.Services
     public interface IPurchaseCenterService
     {
 
-        public List<PurchaseCenterEntity> GetPurchaseCenters();
-        public PurchaseCenterEntity GetPurchaseCenterByID(int id);
+        public IEnumerable<PurchaseCenterDTO> GetPurchaseCenters();
+        public PurchaseCenterDTO GetPurchaseCenterByID(int id);
         public bool AddPurchaseCenter(PurchaseCenterEntity purchaseCenter);
         public bool UpdatePurchaseCenter(uint id, PurchaseCenterEntity purchaseCenter);
         public bool DeletePurchaseCentere(uint id);

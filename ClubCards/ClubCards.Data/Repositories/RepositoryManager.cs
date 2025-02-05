@@ -12,17 +12,16 @@ namespace ClubCards.Data.Repositories
     public class RepositoryManager:IRepositoryManager
     {
         private readonly DataContext _context;
-        public IRepositoryGeneric<BuyingEntity> Buyings { get; }
+        public IRepositoryBuying Buyings { get; }
 
-        public IRepositoryGeneric<CardEntity> Cards { get; }
+        public IRepositoryCard Cards { get; }
 
-        public IRepositoryGeneric<CustomerEntity> Customers { get; }
+        public IRepositoryCustomer Customers { get; }
 
-        public IRepositoryGeneric<PurchaseCenterEntity> PurchaseCenters { get; }
+        public IRepositoryPurchaseCenter PurchaseCenters { get; }
 
-        public IRepositoryGeneric<StoreEntity> Stores { get; }
-
-        public RepositoryManager(DataContext context, IRepositoryGeneric<BuyingEntity> buyings, IRepositoryGeneric<CardEntity> cards, IRepositoryGeneric<CustomerEntity> customers, IRepositoryGeneric<PurchaseCenterEntity> purchaseCenters, IRepositoryGeneric<StoreEntity> stores)
+        public IRepositoryStore Stores { get; }
+        public RepositoryManager(DataContext context, IRepositoryBuying buyings, IRepositoryCard cards, IRepositoryCustomer customers, IRepositoryPurchaseCenter purchaseCenters, IRepositoryStore stores)
         {
             _context = context;
             Buyings = buyings;

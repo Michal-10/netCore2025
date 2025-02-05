@@ -16,9 +16,9 @@ namespace ClubCards.Data.Repositories
         {
         }
 
-        public List<StoreEntity> GetAllDB()
+        public IEnumerable<StoreEntity> GetAllDB()
         {
-            return _dbSet.ToList();//.Include(s=>s.ListBuying).ToList();
+            return _dbSet.Include(s=>s.ListBuying);
         }
 
         public bool UpdateDB(int numStore, StoreEntity storeEntity)

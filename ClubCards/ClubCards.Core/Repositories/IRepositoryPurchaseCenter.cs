@@ -9,6 +9,7 @@ namespace ClubCards.Core.Repositories
 {
     public interface IRepositoryPurchaseCenter:IRepositoryGeneric<PurchaseCenterEntity>
     {
+        public IEnumerable<PurchaseCenterEntity> GetAllDB();
         bool UpdateDB(int numPurchaseCenter, PurchaseCenterEntity purchaseCenterEntity);
     }
 }

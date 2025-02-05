@@ -9,6 +9,7 @@ namespace ClubCards.Core.Repositories
 {
     public interface IRepositoryCard:IRepositoryGeneric<CardEntity>
     {
+        public IEnumerable<CardEntity> GetAllDB();
         bool UpdateDB(int numCard, CardEntity cardEntity);
     }
 }
