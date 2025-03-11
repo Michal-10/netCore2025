@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.DTOs;
+﻿using AutoMapper;
+using ClubCards.Api.Models;
+using ClubCards.Core.DTOs;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,11 @@ namespace ClubCardsProject.Controllers
     public class PurchaseCenterController : ControllerBase
     {
         readonly IPurchaseCenterService _purchaseCenterService;
-        public PurchaseCenterController(IPurchaseCenterService purchaseCenterService)
+        readonly IMapper _mapper;
+        public PurchaseCenterController(IPurchaseCenterService purchaseCenterService, IMapper mapper)
         {
             _purchaseCenterService = purchaseCenterService;
+            _mapper = mapper;
         }
 
         // GET: api/<PurchaseCenterController>
@@ -39,9 +43,10 @@ namespace ClubCardsProject.Controllers
 
         // POST api/<PurchaseCenterController>
         [HttpPost]
-        public ActionResult Post([FromBody] PurchaseCenterEntity value)
+        public ActionResult Post([FromBody] PurchaseCenterPostModel value)
         {
-            bool isSuccess = _purchaseCenterService.AddPurchaseCenter(value);
+            var purchaseCenterDTO = _mapper.Map<PurchaseCenterDTO>(value);
+            bool isSuccess = _purchaseCenterService.AddPurchaseCenter(purchaseCenterDTO);
             if (isSuccess)
                 return Ok(true);
             return BadRequest("ID exists in the system");
@@ -49,9 +54,10 @@ namespace ClubCardsProject.Controllers
 
         // PUT api/<PurchaseCenterController>/5
         [HttpPut("{numPurchaseCenter}")]
-        public ActionResult Put(uint numPurchaseCenter, [FromBody] PurchaseCenterEntity value)
+        public ActionResult Put(uint numPurchaseCenter, [FromBody] PurchaseCenterPostModel value)
         {
-            bool isSuccess = _purchaseCenterService.UpdatePurchaseCenter(numPurchaseCenter, value);
+            var purchaseCenterDTO = _mapper.Map<PurchaseCenterDTO>(value);
+            bool isSuccess = _purchaseCenterService.UpdatePurchaseCenter(numPurchaseCenter, purchaseCenterDTO);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

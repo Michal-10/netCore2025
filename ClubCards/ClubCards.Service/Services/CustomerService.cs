@@ -21,7 +21,6 @@ namespace ClubCardsProject.Services
         public IEnumerable<CustomerDTO> GetCustomers()
         {
             var customers = _repositoryManager.Customers.GetDB();
-            Console.WriteLine(customers.GetType());
             return _mapper.Map<IEnumerable<CustomerDTO>>(customers);
         }
 
@@ -30,25 +29,27 @@ namespace ClubCardsProject.Services
             return _mapper.Map<CustomerDTO>(_repositoryManager.Customers.GetByIdDB(id));
         }
 
-        public bool AddCustomer(CustomerEntity customerObj)
+        public bool AddCustomer(CustomerDTO customerObj)
         {
-            CustomerEntity customer = _repositoryManager.Customers.GetByIdDB((int)customerObj.Id);
+            var customer = _repositoryManager.Customers.GetByIdDB((int)customerObj.Id);
             
             if (customer == null && customerObj.Email.IsEmailValid() && customerObj.Tz.IsTzValid())
             {
-                _repositoryManager.Customers.AddDB(customerObj);
+                var customerEntity = _mapper.Map<CustomerEntity>(customer);
+                _repositoryManager.Customers.AddDB(customerEntity);
                 _repositoryManager.save();
                 return true;
             }
             return false;
         }
 
-        public bool UpdateCustomer(uint idCustomer, CustomerEntity customerObj)
+        public bool UpdateCustomer(uint idCustomer, CustomerDTO customerObj)
         {
-            CustomerEntity customer = _repositoryManager.Customers.GetByIdDB((int)idCustomer);
+            var customer = _repositoryManager.Customers.GetByIdDB((int)idCustomer);
             if (customer != null)
             {
-                _repositoryManager.Customers.UpdateDB((int)idCustomer, customerObj);
+                var customerEntity = _mapper.Map<CustomerEntity>(customerObj);
+                _repositoryManager.Customers.UpdateDB((int)idCustomer, customerEntity);
                 _repositoryManager.save();
                 return true;
             }

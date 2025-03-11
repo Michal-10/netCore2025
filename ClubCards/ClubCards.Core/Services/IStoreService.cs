@@ -12,8 +12,8 @@ namespace ClubCards.Core.Services
     {
         public IEnumerable<StoreDTO> GetStores();
         public StoreDTO GetStoreById(int id);
-        public bool AddStore(StoreEntity store);
-        public bool UpdateStore(uint id, StoreEntity store);
+        public bool AddStore(StoreDTO store);
+        public bool UpdateStore(uint id, StoreDTO store);
         public bool DeleteStore(uint id);
     }
 }

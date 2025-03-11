@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.DTOs;
+﻿using AutoMapper;
+using ClubCards.Api.Models;
+using ClubCards.Core.DTOs;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,11 @@ namespace ClubCardsProject.Controllers
     public class CustomerController : ControllerBase
     {
          readonly ICustomerService _customerService;
-        public CustomerController(ICustomerService customerService)
+        readonly IMapper _mapper;
+        public CustomerController(ICustomerService customerService, IMapper mapper)
         {
             _customerService = customerService;
+            _mapper = mapper;
         }
 
         // GET: api/<CustomerController>
@@ -39,9 +43,10 @@ namespace ClubCardsProject.Controllers
 
         // POST api/<CustomerController>
         [HttpPost]
-        public ActionResult Post([FromBody] CustomerEntity value)
+        public ActionResult Post([FromBody] CustomerPostModel value)
         {
-            bool isSuccess = _customerService.AddCustomer(value);
+            var customerDTO = _mapper.Map<CustomerDTO>(value);
+            bool isSuccess = _customerService.AddCustomer(customerDTO);
             if (isSuccess)
                 return Ok(true);
             return BadRequest("ID exists in the system or the file donwt found");
@@ -49,9 +54,10 @@ namespace ClubCardsProject.Controllers
 
         // PUT api/<CustomerController>/5
         [HttpPut("{idCustomer}")]
-        public ActionResult Put(uint idCustomer, [FromBody] CustomerEntity value)
+        public ActionResult Put(uint idCustomer, [FromBody] CustomerPostModel value)
         {
-            bool isSuccess = _customerService.UpdateCustomer(idCustomer, value);
+            var customerDTO = _mapper.Map<CustomerDTO>(value);
+            bool isSuccess = _customerService.UpdateCustomer(idCustomer, customerDTO);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

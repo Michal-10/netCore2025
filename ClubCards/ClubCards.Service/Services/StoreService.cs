@@ -28,24 +28,26 @@ namespace ClubCardsProject.Services
             return _mapper.Map<StoreDTO>(_repositoryManager.Stores.GetByIdDB(id));
         }
 
-        public bool AddStore(StoreEntity storeObj)
+        public bool AddStore(StoreDTO storeObj)
         {
-            StoreEntity? store = _repositoryManager.Stores.GetByIdDB((int)storeObj.NumStore);
+            var store = _repositoryManager.Stores.GetByIdDB((int)storeObj.NumStore);
             if (store == null && storeObj.Email.IsEmailValid())
             {
-                _repositoryManager.Stores.AddDB(storeObj);
+                var storeEntity = _mapper.Map<StoreEntity>(store);
+                _repositoryManager.Stores.AddDB(storeEntity);
                 _repositoryManager.save();
                 return true;
             }
             return false;
         }
 
-        public bool UpdateStore(uint numStore, StoreEntity storeObj)
+        public bool UpdateStore(uint numStore, StoreDTO storeObj)
         {
-            StoreEntity? store = _repositoryManager.Stores.GetByIdDB((int)numStore);
+            var store = _repositoryManager.Stores.GetByIdDB((int)numStore);
             if (store != null)
             {
-                _repositoryManager.Stores.UpdateDB((int)numStore, storeObj);
+                var storeEntity = _mapper.Map<StoreEntity>(storeObj);
+                _repositoryManager.Stores.UpdateDB((int)numStore, storeEntity);
                 _repositoryManager.save();
                 return true;
             }

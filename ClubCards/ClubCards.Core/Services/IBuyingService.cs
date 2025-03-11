@@ -12,8 +12,8 @@ namespace ClubCards.Core.Services
     {
         public IEnumerable<BuyingDTO> GetBuyings();
         public BuyingDTO GetBuyingById(int id);
-        public bool AddBuying(BuyingEntity buying);
-        public bool UpdateBuying(uint id, BuyingEntity buying);
+        public bool AddBuying(BuyingDTO buying);
+        public bool UpdateBuying(uint id, BuyingDTO buying);
         public bool DeleteBuying(uint id);
     }
 }

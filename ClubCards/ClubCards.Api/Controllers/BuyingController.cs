@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClubCards.Api.Models;
 using ClubCards.Core.DTOs;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
@@ -13,9 +14,11 @@ namespace ClubCardsProject.Controllers
     public class BuyingController : ControllerBase
     {
         readonly IBuyingService _buyingService;
-        public BuyingController(IBuyingService buyingService)
+        readonly IMapper _mapper;
+        public BuyingController(IBuyingService buyingService, IMapper mapper)
         {
             _buyingService = buyingService;
+            _mapper = mapper;
         }
 
         // GET: api/<BuyingController>
@@ -39,9 +42,11 @@ namespace ClubCardsProject.Controllers
 
         // POST api/<BuyingController>
         [HttpPost]
-        public ActionResult Post([FromBody] BuyingEntity value)
+        public ActionResult Post([FromBody] BuyingPostModel value)
         {
-            bool isSuccess = _buyingService.AddBuying(value);
+            var buyingDTO = _mapper.Map<BuyingDTO>(value);
+            bool isSuccess = _buyingService.AddBuying(buyingDTO);
+            //bool isSuccess = _buyingService.AddBuying(value);
             if (isSuccess)
                 return Ok(true);
             return BadRequest("ID exists in the system"); ;
@@ -49,9 +54,10 @@ namespace ClubCardsProject.Controllers
 
         // PUT api/<BuyingController>/5
         [HttpPut("{numBuying}")]
-        public ActionResult Put(uint numBuying, [FromBody] BuyingEntity value)
+        public ActionResult Put(uint numBuying, [FromBody] BuyingPostModel value)
         {
-            bool isSuccess = _buyingService.UpdateBuying(numBuying, value);
+            var buyingDTO = _mapper.Map<BuyingDTO>(value);
+            bool isSuccess = _buyingService.UpdateBuying(numBuying, buyingDTO);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

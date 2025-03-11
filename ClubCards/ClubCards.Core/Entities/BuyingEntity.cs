@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClubCardsProject.Entities
 {
-    public enum PaymentMethodTypes { CASH=1, CREDIT_CARD, CHECK }
-        
+    public enum PaymentMethodTypes { CASH = 1, CREDIT_CARD, CHECK }
+
     public class BuyingEntity
     {
         //יחודי לפי מספר הזמנה
@@ -14,10 +14,10 @@ namespace ClubCardsProject.Entities
         public int Id { get; set; }
         [Required]
         public uint NumBuying { get; set; }//מספר קניה
-       
+
         public int CardId { get; set; }
         public CardEntity Card { get; set; }
-        public int StoreId { get;set; }
+        public int StoreId { get; set; }
         //[ForeignKey(nameof(IdStore))]
         public StoreEntity Store { get; set; }
 
@@ -28,6 +28,6 @@ namespace ClubCardsProject.Entities
 
         public int PaymentMethod { get; set; }
 
-        }
     }
+}
 

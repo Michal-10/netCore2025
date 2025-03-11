@@ -12,8 +12,8 @@ namespace ClubCards.Core.Services
     {
         public IEnumerable<CardDTO> GetCards();
         public CardDTO GetCardByID(int id);
-        public bool AddCard(CardEntity card);
-        public bool UpdateCard(uint id, CardEntity card);
+        public bool AddCard(CardDTO card);
+        public bool UpdateCard(uint id, CardDTO card);
         public bool DeleteCard(uint id);
 
     }

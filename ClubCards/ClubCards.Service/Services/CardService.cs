@@ -28,12 +28,13 @@ namespace ClubCardsProject.Services
             return _mapper.Map<CardDTO>(_repositoryManager.Cards.GetByIdDB(id));
         }
 
-        public bool AddCard(CardEntity cardObj)
+        public bool AddCard(CardDTO cardObj)
         {
-            CardEntity? card = _repositoryManager.Cards.GetByIdDB((int)cardObj.NumCard);
+            var card = _repositoryManager.Cards.GetByIdDB((int)cardObj.NumCard);
             if (card == null)
             {
-                _repositoryManager.Cards.AddDB(cardObj);
+                var cardEntity  = _mapper.Map<CardEntity>(card);
+                _repositoryManager.Cards.AddDB(cardEntity);
                 _repositoryManager.save();
                 return true;
             }
@@ -41,12 +42,13 @@ namespace ClubCardsProject.Services
         }
 
 
-        public bool UpdateCard(uint numCard, CardEntity cardObj)
+        public bool UpdateCard(uint numCard, CardDTO cardObj)
         {
-            CardEntity? card = _repositoryManager.Cards.GetByIdDB((int)numCard);
+            var card = _repositoryManager.Cards.GetByIdDB((int)numCard);
             if (card != null)
             {
-                _repositoryManager.Cards.UpdateDB((int)numCard, cardObj);
+                var cardEntity = _mapper.Map<CardEntity>(cardObj);
+                _repositoryManager.Cards.UpdateDB((int)numCard, cardEntity);
                 _repositoryManager.save() ;
                 return true;
             }

@@ -12,6 +12,7 @@ namespace ClubCards.Api
         public static void addDependency(this IServiceCollection services)
         {
             // Add services to the container.
+
             /* ---------Repositories----------*/
             services.AddScoped<IRepositoryBuying, BuyingRepository>();
             services.AddScoped<IRepositoryCard, CardRepository>();
@@ -35,7 +36,7 @@ namespace ClubCards.Api
 
 
             /*----------AutoMapper-----------*/
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(typeof(MappingProfile), typeof(PostModelMappingProfile));
 
             // services.AddDbContext<DataContext>(option =>
             //           option.UseSqlServer("Data Source=DESKTOP-SSNMLFD;Initial Catalog=ClubCards; Integrated Security=true;"));

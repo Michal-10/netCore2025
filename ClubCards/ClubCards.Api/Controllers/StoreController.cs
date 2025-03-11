@@ -1,4 +1,6 @@
-﻿using ClubCards.Core.DTOs;
+﻿using AutoMapper;
+using ClubCards.Api.Models;
+using ClubCards.Core.DTOs;
 using ClubCards.Core.Services;
 using ClubCardsProject.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,11 @@ namespace ClubCardsProject.Controllers
     public class StoreController : ControllerBase
     {
         readonly IStoreService _storeService;
-        public StoreController(IStoreService storeService)
+        readonly IMapper _mapper;
+        public StoreController(IStoreService storeService, IMapper mapper)
         {
             _storeService = storeService;
+            _mapper = mapper;
         }
 
         // GET: api/<StoreController>
@@ -38,9 +42,10 @@ namespace ClubCardsProject.Controllers
 
         // POST api/<StoreController>
         [HttpPost]
-        public ActionResult Post([FromBody] StoreEntity value)
+        public ActionResult Post([FromBody] StorePostModel value)
         {
-            bool isSuccess = _storeService.AddStore(value);
+            var storeDTO = _mapper.Map<StoreDTO>(value);
+            bool isSuccess = _storeService.AddStore(storeDTO);
             if (isSuccess)
                 return Ok(true);
             return BadRequest("ID exists in the system");
@@ -48,9 +53,10 @@ namespace ClubCardsProject.Controllers
 
         // PUT api/<StoreController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(uint id, [FromBody] StoreEntity value)
+        public ActionResult Put(uint id, [FromBody] StorePostModel value)
         {
-            bool isSuccess = _storeService.UpdateStore(id, value);
+            var storeDTO = _mapper.Map<StoreDTO>(value);
+            bool isSuccess = _storeService.UpdateStore(id, storeDTO);
             if (isSuccess)
                 return Ok(true);
             return NotFound();

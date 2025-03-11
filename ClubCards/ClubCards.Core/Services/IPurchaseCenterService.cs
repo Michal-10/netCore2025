@@ -13,8 +13,8 @@ namespace ClubCards.Core.Services
 
         public IEnumerable<PurchaseCenterDTO> GetPurchaseCenters();
         public PurchaseCenterDTO GetPurchaseCenterByID(int id);
-        public bool AddPurchaseCenter(PurchaseCenterEntity purchaseCenter);
-        public bool UpdatePurchaseCenter(uint id, PurchaseCenterEntity purchaseCenter);
+        public bool AddPurchaseCenter(PurchaseCenterDTO purchaseCenter);
+        public bool UpdatePurchaseCenter(uint id, PurchaseCenterDTO purchaseCenter);
         public bool DeletePurchaseCentere(uint id);
     }
 }

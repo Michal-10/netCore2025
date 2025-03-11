@@ -12,8 +12,8 @@ namespace ClubCards.Core.Services
     {
         public IEnumerable<CustomerDTO> GetCustomers();
         public CustomerDTO GetCustomerById(int id);
-        public bool AddCustomer(CustomerEntity customer);
-        public bool UpdateCustomer(uint id, CustomerEntity customer);
+        public bool AddCustomer(CustomerDTO customer);
+        public bool UpdateCustomer(uint id, CustomerDTO customer);
         public bool DeleteCustomer(uint id);
 
     }

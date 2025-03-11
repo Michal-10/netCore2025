@@ -29,24 +29,26 @@ namespace ClubCardsProject.Services
             return _mapper.Map<BuyingDTO>(_repositoryManager.Buyings.GetByIdDB(id));
         }
 
-        public bool AddBuying(BuyingEntity buyingObj)
+        public bool AddBuying(BuyingDTO buyingObj)
         {
-            BuyingEntity? buying = _repositoryManager.Buyings.GetByIdDB((int)buyingObj.NumBuying);
+            var buying = _repositoryManager.Buyings.GetByIdDB((int)buyingObj.NumBuying);
             if (buying == null)
             {
-                _repositoryManager.Buyings.AddDB(buyingObj);
+                var buyingEntity = _mapper.Map<BuyingEntity>(buyingObj);
+                _repositoryManager.Buyings.AddDB(buyingEntity);
                 _repositoryManager.save();
                 return true;
             }
             return false;
         }
 
-        public bool UpdateBuying(uint numBuying, BuyingEntity buyingObj)
+        public bool UpdateBuying(uint numBuying, BuyingDTO buyingObj)
         {
-            BuyingEntity? buying = _repositoryManager.Buyings.GetByIdDB((int)numBuying);
+            var buying = _repositoryManager.Buyings.GetByIdDB((int)numBuying);
             if (buying != null)
             {
-                _repositoryManager.Buyings.UpdateDB((int)numBuying, buyingObj);
+                var buyingEntity = _mapper.Map<BuyingEntity>(buying);
+                _repositoryManager.Buyings.UpdateDB((int)numBuying, buyingEntity);
                 _repositoryManager.save();
                 return true;
             }

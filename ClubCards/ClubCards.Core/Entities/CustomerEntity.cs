@@ -6,7 +6,7 @@ namespace ClubCardsProject.Entities
     {
         [Key]
         public int Id { get; set; }
-        public uint IdCustomer { get; set; }
+        public uint NumCustomer { get; set; }
         public string Tz { get; set; }
         public string? FirstName { get; set; }
         public string LastName { get; set; }
